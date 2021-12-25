@@ -28,6 +28,9 @@ This is the stock layout with the following modifications.
 - RGB Speed Up/Down: `FN`+`E`/`D`
 - Added `rgb.h` file that enumerates LEDs and contains common LED arrays.
 - Added indicator lights for Layer 1/2/3 to indicate which keys have modified functions compared to default layer 0.
+- Created custom RGB lighting modes in - [`rgb_matrix_user.inc`]
+  - Custom Random Reactive Simple - Keys light up with random colors when pressed (`FN`+`8`)
+  - Custom Solid Reactive Multiwide - Just testing to see if I understand how the code works (`FN`+`9`)
 
 ## Debounce
 - Symmetric, Deferred, Per-key debounce algorithm (`sym_defer_pk`) - [`rules.mk`](rules.mk)

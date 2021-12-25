@@ -34,3 +34,6 @@ VIA_ENABLE = no
 
 KEY_OVERRIDE_ENABLE = yes # Enable Key overrides
 TAP_DANCE_ENABLE = yes # Enable Tap Dancing (different action if tapped multiple times)
+
+# Enable custom RGB effects
+RGB_MATRIX_CUSTOM_USER = yes
