@@ -145,14 +145,22 @@ const uint16_t LED_LIST_FUNCROW[] = { LED_ESC, LED_F1, LED_F2, LED_F3, LED_F4, L
 int LED_LIST_NUMROW_SIZE = 15;
 const uint16_t LED_LIST_NUMROW[] = { LED_GRV, LED_1, LED_2, LED_3, LED_4, LED_5, LED_6, LED_7, LED_8, LED_9, LED_0, LED_MINS, LED_EQL, LED_BSPC, LED_DEL};
 
-
-int LED_LIST_NUMPAD_SIZE = 12;
-const uint16_t LED_LIST_NUMPAD[] = {
-    LED_7, LED_8, LED_9,
+int LED_LIST_NUMPAD_NUM_SIZE = 10;
+const uint16_t LED_LIST_NUMPAD_NUM[] = {
     LED_U, LED_I, LED_O,
     LED_J, LED_K, LED_L,
-    LED_M, LED_COMM, LED_DOT
-    };
+    LED_M, LED_COMM, LED_DOT,
+    LED_SPC, 
+};
+
+int LED_LIST_NUMPAD_MODS_SIZE = 10;
+const uint16_t LED_LIST_NUMPAD_MODS[] = {
+          LED_7, LED_8, LED_9,
+    LED_Y,                LED_P,
+    LED_H,                LED_SCLN,
+     
+    LED_B, LED_F12, LED_RALT
+};
 
 
 int LED_SIDE_LEFT_SIZE = 8;
@@ -163,3 +171,6 @@ const uint16_t LED_SIDE_RIGHT[] = { LED_R1, LED_R2, LED_R3, LED_R4, LED_R5, LED_
 
 int LED_LIST_IJKL_SIZE = 4;
 const uint16_t LED_LIST_IJKL[] = {LED_I, LED_J, LED_K, LED_L};
+
+int LED_LIST_HJKL_SIZE = 4;
+const uint16_t LED_LIST_HJKL[] = {LED_H, LED_J, LED_K, LED_L};
