@@ -16,6 +16,9 @@ RGB_MATRIX_EFFECT(my_solid_reactive_wide)
 // and slowly fade
 RGB_MATRIX_EFFECT(random_color_reactive)
 
+// Turn off all RGB effects, but keep indicator lights
+RGB_MATRIX_EFFECT(turn_effects_off)
+
 // Step 2.
 // Define effects inside the `RGB_MATRIX_CUSTOM_EFFECT_IMPLS` ifdef block
 #ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
@@ -126,13 +129,14 @@ void populate_map(void){
  * Based on: https://www.reddit.com/r/MechanicalKeyboards/comments/hx5v2x/my_adventure_with_custom_lighting_effects_in_qmk/
  */
 bool random_color_reactive(effect_params_t* params) {
+    RGB_MATRIX_USE_LIMITS(led_min, led_max);
+
     // If this is the first time start up, randomize the color scheme.
     // and initialize the array
     if (params->init){
         populate_map();
     }
 
-    RGB_MATRIX_USE_LIMITS(led_min, led_max);
     srand(osalOsGetSystemTimeX());
 
     // Maximum amount of ticks before effect is over (I think?)
@@ -177,6 +181,22 @@ bool random_color_reactive(effect_params_t* params) {
         RGB rgb = rgb_matrix_hsv_to_rgb(hsv);
 
         rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
+    }
+    return rgb_matrix_check_finished_leds(led_max);
+}
+
+bool turn_effects_off(effect_params_t* params){
+    RGB_MATRIX_USE_LIMITS(led_min, led_max);
+
+    // We can't use rgb_matrix_set_color_all 
+    // because it will also
+    // turn off indicator light effects
+    // rgb_matrix_set_color_all(0,0,0);
+
+    // Loop through LEDS
+    for (uint8_t i = led_min; i < led_max; i++) {
+        RGB_MATRIX_TEST_LED_FLAGS();
+        rgb_matrix_set_color(i, 0, 0, 0);
     }
     return rgb_matrix_check_finished_leds(led_max);
 }
