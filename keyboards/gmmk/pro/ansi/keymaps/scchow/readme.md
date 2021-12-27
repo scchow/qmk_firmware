@@ -35,7 +35,8 @@ This is the stock layout with the following modifications.
 - Added indicator lights for Layer 1/2/3 to indicate which keys have modified functions compared to default layer 0.
 - Created custom RGB lighting modes in - [`rgb_matrix_user.inc`]
   - Custom Random Reactive Simple - Keys light up with random colors when pressed (`FN`+`8`)
-  - Custom Solid Reactive Multiwide - Just testing to see if I understand how the code works (`FN`+`9`)
+  - Custom Better Breathing Function - Same as Breathe but based on implementation from RGBLight, which is for some reason different from the default RGBMatrix implementation (`FN`+`9`)
+  - Custom Solid Reactive Multiwide - Just testing to see if I understand how the code works (`FN`+`T`)
   - Turn off all Lighting modes but keep indicator lights (`FN`+`0`)
 
 ## Debounce
