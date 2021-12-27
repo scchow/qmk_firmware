@@ -43,6 +43,7 @@ enum custom_keycodes{
     RGB_SET_OFF,
     RGB_CUSTOM_SOLID_REACTIVE_MULTIWIDE,
     RGB_CUSTOM_RANDOM_REACTIVE,
+    RGB_CUSTOM_BREATHING,
 };
 
 // Tap Dancing Enums
@@ -143,8 +144,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_RGB] = LAYOUT(
         EEPROM_RESET , KC_CALC, KC_MYCM, KC_WHOM, KC_MSEL, KC_MPRV, KC_MNXT, KC_MPLY, KC_MSTP, KC_MUTE, KC_VOLD, KC_VOLU, _______, _______,          _______,
-        RGB_TOG, RGB_MODE_PLAIN, RGB_MODE_BREATHE, RGB_HUE_BREATHE, RGB_CYCLE_ALL, RGB_SOLID_REACTIVE_MULTIWIDE, RGB_MULTISPLASH, RGB_SOLID_MULTISPLASH, RGB_CUSTOM_RANDOM_REACTIVE, RGB_CUSTOM_SOLID_REACTIVE_MULTIWIDE, RGB_SET_OFF, _______, _______, _______,          _______,
-        RGB_MOD, RGB_HUI, RGB_VAI, RGB_SPI, _______, _______, _______, _______, _______, _______, _______, _______, _______, RESET,            _______,
+        RGB_TOG, RGB_MODE_PLAIN, RGB_MODE_BREATHE, RGB_HUE_BREATHE, RGB_CYCLE_ALL, RGB_SOLID_REACTIVE_MULTIWIDE, RGB_MULTISPLASH, RGB_SOLID_MULTISPLASH, RGB_CUSTOM_RANDOM_REACTIVE, RGB_CUSTOM_BREATHING, RGB_SET_OFF, _______, _______, _______,          _______,
+        RGB_MOD, RGB_HUI, RGB_VAI, RGB_SPI, _______, RGB_CUSTOM_SOLID_REACTIVE_MULTIWIDE, _______, _______, _______, _______, _______, _______, _______, RESET,            _______,
         _______, RGB_HUD, RGB_VAD, RGB_SPD, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______,
         _______,          _______, _______, _______, _______, NK_OFF, NK_ON, _______, _______, _______, _______,          _______, RGB_MOD, _______,
         _______, _______, _______,                            _______,                            _______, _______, _______, RGB_SPD, RGB_RMOD, RGB_SPI
@@ -247,7 +248,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 
 void keyboard_post_init_user(void) {
   // Customise these values to desired behaviour
-  debug_enable = false;
+  debug_enable = true;
 //   debug_matrix=true;
 //   debug_keyboard=true;
   //debug_mouse=true;
@@ -287,7 +288,6 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     }
 
     if (layer_state_is(_NAV_0) || layer_state_is(_NAV_1) || layer_state_is(_NAV_0_VIM) || layer_state_is(_NAV_1_VIM)){
-
 
         const uint16_t *NAV_KEY_LEDS = LED_LIST_IJKL;
         int NAV_KEY_LEDS_SIZE = LED_LIST_IJKL_SIZE;
@@ -367,6 +367,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)  {
             break;
         case RGB_CUSTOM_RANDOM_REACTIVE:
             rgb_matrix_mode(RGB_MATRIX_CUSTOM_random_color_reactive);
+            break;
+        case RGB_CUSTOM_BREATHING:
+            rgb_matrix_mode(RGB_MATRIX_CUSTOM_better_breathing);
             break;
         case RGB_SET_OFF:
             rgb_matrix_mode(RGB_MATRIX_CUSTOM_turn_effects_off);
