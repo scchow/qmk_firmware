@@ -50,6 +50,8 @@ enum custom_keycodes{
 enum tap_dances{
     TD_RESET_CAPS,
     TD_F12_NUMPAD,
+    TD_RESET_CAPS_HOLD,
+    TD_DEL_PRSC_HOLD,
 };
 
 // Enum states for complex type dancing
@@ -76,9 +78,17 @@ typedef struct {
 // Managing current dance 
 td_state_t cur_dance(qk_tap_dance_state_t *state);
 
-// For the Delete-Numpad tap dance. 
+// For the F12-Numpad tap dance. 
 void td_f12_num_finished(qk_tap_dance_state_t *state, void *user_data);
 void td_f12_num_reset(qk_tap_dance_state_t *state, void *user_data);
+
+// For the Delete-PrintScreen tap dance.
+void td_del_print_finished(qk_tap_dance_state_t *state, void *user_data);
+void td_del_print_reset(qk_tap_dance_state_t *state, void *user_data);
+
+// For the Reset-Capslock tap dance.
+void td_reset_caps_finished(qk_tap_dance_state_t *state, void *user_data);
+void td_reset_caps_reset(qk_tap_dance_state_t *state, void *user_data);
 
 // Reset layers back to default and Caps lock off
 void reset_layers_and_caps(void){
@@ -108,8 +118,13 @@ void td_caps_reset(qk_tap_dance_state_t *state, void *user_data){
 qk_tap_dance_action_t tap_dance_actions[] = {
     // Tap once for Escape, twice for Caps Lock
     [TD_RESET_CAPS] = ACTION_TAP_DANCE_FN(td_caps_reset),
-    [TD_F12_NUMPAD] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_f12_num_finished, td_f12_num_reset)
+    [TD_F12_NUMPAD] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_f12_num_finished, td_f12_num_reset),
+    [TD_RESET_CAPS_HOLD] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_reset_caps_finished, td_reset_caps_reset),
+    [TD_DEL_PRSC_HOLD] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_del_print_finished, td_del_print_reset),
 };
+
+// indicator light for print screen
+static bool print_screen_held = false;
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -134,11 +149,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Since this is, among other things, a "gaming" keyboard, a key combination to enable NKRO on the fly is provided for convenience.
     // Press Fn+N to toggle between 6KRO and NKRO. This setting is persisted to the EEPROM and thus persists between restarts.
     [_DEFAULT] = LAYOUT(
-        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  TD(TD_F12_NUMPAD),  TD(TD_RESET_CAPS),    KC_MUTE,
+        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  TD(TD_F12_NUMPAD),  TD(TD_RESET_CAPS_HOLD),    KC_MUTE,
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,          KC_DEL,
-        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,          KC_DEL,
-        TT(_NAV_0_VIM),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,           KC_HOME,
-        KC_LSFT,          KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_RSFT, KC_UP,   KC_END,
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,          KC_HOME,
+        TT(_NAV_0_VIM),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_END,
+        KC_LSFT,          KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_RSFT, KC_UP,   LT(_NAV_0_VIM, KC_ESC),
         KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(1),   KC_RCTL, KC_LEFT, KC_DOWN, KC_RGHT
     ),
 
@@ -176,9 +191,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_NAV_0] = LAYOUT(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
-        _______, _______, _______, _______, _______, _______, _______, KC_BSPC,  KC_PGUP, KC_DEL, _______, _______, _______, _______,          _______,
-        _______, _______, _______, _______, _______, _______, _______, KC_HOME, KC_PGDN, KC_END, _______,  _______,          _______,          KC_PGUP,
-        KC_CAPS,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_CAPS, KC_PGUP, KC_PGDN,
+        _______, _______, _______, _______, _______, _______, _______, KC_BSPC,  KC_PGUP, KC_DEL, _______, _______, _______, _______,          KC_PGUP,
+        _______, _______, _______, _______, _______, _______, _______, KC_HOME, KC_PGDN, KC_END, _______,  _______,          _______,          KC_PGDN,
+        KC_CAPS,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_CAPS, KC_PGUP, _______,
         _______, _______, MO(_NAV_1),                            _______,                            _______, _______, _______, KC_HOME, KC_PGDN, KC_END
     ),
 
@@ -195,9 +210,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_NAV_0_VIM] = LAYOUT(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
-        _______, _______, _______, _______, _______, _______, _______, KC_BSPC,  KC_DEL, _______, _______, _______, _______, _______,          _______,
-        _______, _______, _______, _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, _______,  _______,          _______,          KC_PGUP,
-        KC_CAPS,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_CAPS, KC_PGUP, KC_PGDN,
+        _______, _______, _______, _______, _______, _______, _______, KC_BSPC,  KC_DEL, _______, _______, _______, _______, _______,          KC_PGUP,
+        TO(_DEFAULT), _______, _______, _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, _______,  _______,          _______,           KC_PGDN,
+        _______,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                 KC_CAPS, KC_PGUP, _______,
         _______, _______, MO(_NAV_1_VIM),                            _______,                            _______, _______, _______, KC_HOME, KC_PGDN, KC_END
     ),
 
@@ -248,7 +263,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 
 void keyboard_post_init_user(void) {
   // Customise these values to desired behaviour
-  debug_enable = true;
+  debug_enable = false;
 //   debug_matrix=true;
 //   debug_keyboard=true;
   //debug_mouse=true;
@@ -274,6 +289,10 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
         RGB_MATRIX_INDICATOR_SET_COLOR(LED_PSCR, 0, 100, 100); //Light up Reset layer key
     }
 
+    if (print_screen_held){
+        RGB_MATRIX_INDICATOR_SET_COLOR(LED_END, 153, 51, 255);
+    }
+
     // Light up Caps lock key if we are in navigation mode (layer 2)
     if (layer_state_is(_RGB)){
         RGB_MATRIX_INDICATOR_SET_COLOR(LED_TAB, 255, 255, 255); // Tab - White
@@ -285,6 +304,7 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
         RGB_MATRIX_INDICATOR_SET_COLOR(LED_D, 255, 0, 0); // D - Red - Speed
         RGB_MATRIX_INDICATOR_SET_COLOR(LED_N, 0, 255, 0); // N - N-key-rollover on - Green
         RGB_MATRIX_INDICATOR_SET_COLOR(LED_B, 255, 0, 0); // B - N-key-rollover off- Red
+        RGB_MATRIX_INDICATOR_SET_COLOR(LED_BSLS, 255, 0, 0); // \ - Reset on Red
     }
 
     if (layer_state_is(_NAV_0) || layer_state_is(_NAV_1) || layer_state_is(_NAV_0_VIM) || layer_state_is(_NAV_1_VIM)){
@@ -301,20 +321,25 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 
         // if we are in the layer 1 of navigation
         if (layer_state_is(_NAV_1) || layer_state_is(_NAV_1_VIM)){
-            rgb_light_sequence(NAV_KEY_LEDS, NAV_KEY_LEDS_SIZE, 153, 51, 255, led_min, led_max); // HJKL in purple
-            rgb_light_sequence(LED_LIST_ARROWS, LED_LIST_ARROWS_SIZE, 28, 127, 232, led_min, led_max); // Arrows in teal blue
+            RGB_MATRIX_INDICATOR_SET_COLOR(LED_LALT, 28, 127, 232); // Left Alt key in teal
+            rgb_light_sequence(NAV_KEY_LEDS, NAV_KEY_LEDS_SIZE, 28, 127, 232, led_min, led_max); // HJKL in teal blue
+            rgb_light_sequence(LED_LIST_ARROWS, LED_LIST_ARROWS_SIZE, 153, 51, 255, led_min, led_max); // Arrows in purple
+            RGB_MATRIX_INDICATOR_SET_COLOR(LED_PGUP, 28, 127, 232); // Page Up key in teal
+            RGB_MATRIX_INDICATOR_SET_COLOR(LED_PGDN, 28, 127, 232); // Page Down key in teal
         }
         else {
             RGB_MATRIX_INDICATOR_SET_COLOR(LED_LALT, 153, 51, 255); // Left Alt key in purple
-            rgb_light_sequence(NAV_KEY_LEDS, NAV_KEY_LEDS_SIZE, 28, 127, 232, led_min, led_max); // HJKL in teal blue
+            rgb_light_sequence(NAV_KEY_LEDS, NAV_KEY_LEDS_SIZE, 153, 51, 255, led_min, led_max); // HJKL in purple
             rgb_light_sequence(LED_LIST_ARROWS, LED_LIST_ARROWS_SIZE, 153, 51, 255, led_min, led_max); // Arrows in purple
+            RGB_MATRIX_INDICATOR_SET_COLOR(LED_PGUP, 28, 127, 232); // Page Up key in teal
+            RGB_MATRIX_INDICATOR_SET_COLOR(LED_PGDN, 28, 127, 232); // Page Down key in teal
         }
 
         // Light up navigation lights that are the same across all layers
         RGB_MATRIX_INDICATOR_SET_COLOR(LED_CAPS, 28, 127, 232); // Caps lock in teal blue
         rgb_light_sequence(LED_SIDE_LEFT, LED_SIDE_LEFT_SIZE, 28, 127, 232, led_min, led_max); // Indicator in teal blue
         RGB_MATRIX_INDICATOR_SET_COLOR(LED_U, 255, 0, 0); // U key - Backspace - Red
-        RGB_MATRIX_INDICATOR_SET_COLOR(DELETE_KEY_LED, 0, 0, 255); // O key - Delete - Blue
+        RGB_MATRIX_INDICATOR_SET_COLOR(DELETE_KEY_LED, 255, 0, 0); // O key - Delete - Blue
 
     }
 
@@ -330,7 +355,8 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     if (IS_HOST_LED_ON(USB_LED_CAPS_LOCK)){
         // RGB_MATRIX_INDICATOR_SET_COLOR(4, 0, 100, 0); //Light up left shift key
         RGB_MATRIX_INDICATOR_SET_COLOR(LED_RSFT, 204, 102, 0); //Light up right shift key in orange
-        RGB_MATRIX_INDICATOR_SET_COLOR(LED_LSFT, 204, 102, 0); //Light up right shift key in orange
+        // RGB_MATRIX_INDICATOR_SET_COLOR(LED_LSFT, 204, 102, 0); //Light up left shift key in orange
+        RGB_MATRIX_INDICATOR_SET_COLOR(LED_SPC, 204, 102, 0); //Light up Space key in orange
         rgb_light_sequence(LED_SIDE_RIGHT, LED_SIDE_RIGHT_SIZE, 204, 102, 0, led_min, led_max);
     }
 }
@@ -516,4 +542,122 @@ void td_f12_num_reset(qk_tap_dance_state_t *state, void *user_data) {
         default: break;
     }
     td_f12_num_tap_state.state = TD_NONE;
+}
+
+// Create an instance of 'td_tap_t' for the 'f12_num' tap dance.
+static td_tap_t td_reset_caps_tap_state = {
+    .is_press_action = true,
+    .state = TD_NONE
+};
+
+void td_reset_caps_finished(qk_tap_dance_state_t *state, void *user_data) {
+    td_reset_caps_tap_state.state = cur_dance(state);
+    switch (td_reset_caps_tap_state.state) {
+        case TD_SINGLE_TAP: 
+            #ifdef CONSOLE_ENABLE
+                dprint("Press Reset\n");
+            #endif
+            reset_layers_and_caps();
+            break;
+        case TD_SINGLE_HOLD: 
+            #ifdef CONSOLE_ENABLE
+                dprint("Hold Reset for caps\n");
+            #endif
+            register_code(KC_CAPS);
+            // if (!layer_state_is(_NUM_PAD)){
+            //     dprint("Numpad off, read hold, turning on numpad.\n");
+            //     layer_on(_NUM_PAD);
+            // }
+            // // Expose a way to press F12 if numpad is on (by double tap) 
+            // else{
+            //     dprint("Numpad on, read hold, sending F12.\n");
+            //     register_code(KC_F12);
+            // }
+            // // layer_invert(_NUM_PAD); 
+            // break;
+        // case TD_DOUBLE_TAP: register_code(KC_ESC); break;
+        // case TD_DOUBLE_HOLD: register_code(KC_LALT); break;
+        // // Last case is for fast typing. Assuming your key is `f`:
+        // // For example, when typing the word `buffer`, and you want to make sure that you send `ff` and not `Esc`.
+        // // In order to type `ff` when typing fast, the next character will have to be hit within the `TAPPING_TERM`, which by default is 200ms.
+        // case TD_DOUBLE_SINGLE_TAP: tap_code(KC_X); register_code(KC_X);
+        default: break;
+    }
+}
+
+void td_reset_caps_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (td_reset_caps_tap_state.state) {
+        case TD_SINGLE_TAP: 
+            // Nothing to do on release, as reset state already sent
+            break;
+        case TD_SINGLE_HOLD: 
+            // Stop holding down caps lock
+            unregister_code(KC_CAPS);
+            break;
+        // case TD_DOUBLE_TAP: unregister_code(KC_ESC); break;
+        // case TD_DOUBLE_HOLD: unregister_code(KC_LALT);
+        // case TD_DOUBLE_SINGLE_TAP: unregister_code(KC_X);
+        default: break;
+    }
+    td_reset_caps_tap_state.state = TD_NONE;
+}
+
+// Create an instance of 'td_tap_t' for the 'f12_num' tap dance.
+static td_tap_t td_del_print_tap_state = {
+    .is_press_action = true,
+    .state = TD_NONE
+};
+
+void td_del_print_finished(qk_tap_dance_state_t *state, void *user_data) {
+    td_del_print_tap_state.state = cur_dance(state);
+    switch (td_del_print_tap_state.state) {
+        case TD_SINGLE_TAP: 
+            #ifdef CONSOLE_ENABLE
+                dprint("Press Delete\n");
+            #endif
+            register_code(KC_DEL);
+            break;
+        case TD_SINGLE_HOLD: 
+            #ifdef CONSOLE_ENABLE
+                dprint("Hold Delete for Print Screen\n");
+            #endif
+            register_code(KC_PSCR);
+            print_screen_held = true;
+            // if (!layer_state_is(_NUM_PAD)){
+            //     dprint("Numpad off, read hold, turning on numpad.\n");
+            //     layer_on(_NUM_PAD);
+            // }
+            // // Expose a way to press F12 if numpad is on (by double tap) 
+            // else{
+            //     dprint("Numpad on, read hold, sending F12.\n");
+            //     register_code(KC_F12);
+            // }
+            // // layer_invert(_NUM_PAD); 
+            // break;
+        // case TD_DOUBLE_TAP: register_code(KC_ESC); break;
+        // case TD_DOUBLE_HOLD: register_code(KC_LALT); break;
+        // // Last case is for fast typing. Assuming your key is `f`:
+        // // For example, when typing the word `buffer`, and you want to make sure that you send `ff` and not `Esc`.
+        // // In order to type `ff` when typing fast, the next character will have to be hit within the `TAPPING_TERM`, which by default is 200ms.
+        // case TD_DOUBLE_SINGLE_TAP: tap_code(KC_X); register_code(KC_X);
+        default: break;
+    }
+}
+
+void td_del_print_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (td_reset_caps_tap_state.state) {
+        case TD_SINGLE_TAP: 
+            unregister_code(KC_DEL);
+            break;
+        case TD_SINGLE_HOLD: 
+            // Stop holding down caps lock
+            unregister_code(KC_PSCR);
+            print_screen_held = false;
+            break;
+        // case TD_DOUBLE_TAP: unregister_code(KC_ESC); break;
+        // case TD_DOUBLE_HOLD: unregister_code(KC_LALT);
+        // case TD_DOUBLE_SINGLE_TAP: unregister_code(KC_X);
+        default: break;
+    }
+    td_reset_caps_tap_state.state = TD_NONE;
 }
