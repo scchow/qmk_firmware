@@ -26,98 +26,128 @@ Applied modifications based on: https://github.com/josefadamcik/SofleKeyboard/pu
 #include QMK_KEYBOARD_H
 
 #define INDICATOR_BRIGHTNESS 30
-
 #define HSV_OVERRIDE_HELP(h, s, v, Override) h, s , Override
 #define HSV_OVERRIDE(hsv, Override) HSV_OVERRIDE_HELP(hsv,Override)
 
-#define NUM_INDICATORS 1
-#define NUM_UNDERGLOW 6
-#define START_BACKLIGHT (NUM_INDICATORS + NUM_UNDERGLOW)
-#define START_OUTER_FN_KEYS (START_BACKLIGHT + 1) // +1!
-#define NUM_OUTER_FN_KEYS 4
-#define START_INNER_KEYS (START_BACKLIGHT)
-#define START_THUMB (START_BACKLIGHT + 19)		// why 19? Tja
-#define NUM_BACKLIGHT 29
-#define LEFTRIGHT_SPLIT (NUM_INDICATORS + NUM_UNDERGLOW + NUM_BACKLIGHT)
 
-/*
+/* LED Indices for Sofle RGB v3.0
+ *
+ * Front
+ *                         LEFT SIDE                                                      RIGHT SIDE 
+ *                                                       NOTE: added a +1 offset to values below so that it works, idk why it's needed)
+ *                 Column Number
+ *                  0     1      2      3      4     5       6          13      12     11     10     9      8       7  
+ * Row Num    ,-----------------------------------------.                    ,-----------------------------------------.
+ *    0       |  11  |  12  |  21  |  22  |  31  |  32  |                    |  68  |  67  |  58  |  57  |  48  |  47  |
+ *            |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ *    1       |  10  |  13  |  20  |  23  |  30  |  33  |                    |  69  |  66  |  59  |  56  |  49  |  46  |
+ *            |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ *    2       |  9   |  14  |  19  |  24  |  29  |  34  |-------.    ,-------|  70  |  65  |  60  |  55  |  50  |  45  |
+ *            |------+------+------+------+------+------|   0   |    |   36   |------+------+------+------+------+-----|
+ *    3       |  8   |  15  |  18  |  25  |  28  |  35  |-------|    |-------|  71  |  64  |  61  |  54  |  51  |  44  |
+ *            `-----------------------------------------/       /    \      \-----------------------------------------'
+ *    4              |  7   |  17  |  18  |  26  |     /   27  /      \  63  \      |  62  |  53  |  52  |   43  |
+ *                   |      |      |      |      |    /       /        \      \     |      |      |      |      |
+ *                     `-------------------------------------'          '------''-------------------------------'
+ * Back underglow
+ *                          RIGHT SIDE                                                    LEFT SIDE
+ *  NOTE: added a +1 offset to values below so that it works, idk why it's needed)
+ *                                                          
+ * Column Num    0     1      2      3      4     5       6          13      12     11     10     9      8       7  
+ *   Row Num  ,-----------------------------------------.                    ,-----------------------------------------.
+ *      0     |      |      |      |      |      |      |                    |      |      |      |      |      |      |
+ *            |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ *      1     |      |  37  |      | 38   |      |  39  |                    |  3  |      |  2  |      |  1  |      |
+ *            |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ *      2     |      |      |      |      |      |      |-------.    ,-------|      |      |      |      |      |      |
+ *            |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
+ *      3     |      |      |      |      |      |      |-------|    |-------|      |      |      |      |      |      |
+ *            `-----------------------------------------/       /     \      \-----------------------------------------'
+ *      4            | 42   |   41 |      |      |   40/       /       \      \ 4  |      |   5 |      |   6 |
+ *                   |      |      |      |      |    /       /         \      \    |      |      |      |      |
+ *                   `---------------------------------------'           '------''------------------------------'
+ */
+
+
+// Number of Indicator Lights
+#define NUM_INDICATORS 1
+// Number of underglow LEDs
+#define NUM_UNDERGLOW 6
+// Number of Per-Key RGB Backlighting
+#define NUM_BACKLIGHT 29
+// Number of LEDs in each half of board
+#define NUM_PER_SIDE NUM_INDICATORS + NUM_UNDERGLOW + NUM_BACKLIGHT + 1 // 1+6+29 +1 = 36 + 1 = 37 (I am not sure why there is an extra +1 offset for leds on right side)
+// Number of outer column keys
+#define NUM_OUTER_FN_KEYS 4
+
+// Starting index of underglow lighting
+#define START_UNDERGLOW 1
+// Starting LED number of all Per-Key RGB Backlighting  (should match key at front: (row4, col0))
+#define START_PER_KEY_RGB NUM_INDICATORS + NUM_UNDERGLOW  // 1 + 6 = 7
+// Starting index of outer column keys (Columns 0 and 7) (number of key at (row3, col7))
+#define START_OUTER_FN_KEYS 8 // 7+1 = 9; Offset the outer thumb row key
+
 // Light combinations
+// Set the LEDs for the indicator leds
 #define SET_INDICATORS(hsv) \
     {0, NUM_INDICATORS, HSV_OVERRIDE_HELP(hsv, INDICATOR_BRIGHTNESS)}, \
-    {LEFTRIGHT_SPLIT+0, NUM_INDICATORS, hsv}
-#define SET_UNDERGLOW(hsv) \
-	{NUM_INDICATORS, NUM_UNDERGLOW, hsv}, \
-    {LEFTRIGHT_SPLIT+NUM_INDICATORS, NUM_UNDERGLOW, hsv}
-#define SET_NUMPAD(hsv)     \
-	{LEFTRIGHT_SPLIT+15, 5, hsv},\
-	  {LEFTRIGHT_SPLIT+22, 3, hsv},\
-	  {LEFTRIGHT_SPLIT+27, 3, hsv}
-#define SET_NUMROW(hsv) \
-	{10, 2, hsv}, \
-		{20, 2, hsv}, \
-		{30, 2, hsv}, \
-	  {LEFTRIGHT_SPLIT+ 10, 2, hsv}, \
-	  {LEFTRIGHT_SPLIT+ 20, 2, hsv}, \
-	  {LEFTRIGHT_SPLIT+ 30, 2, hsv}
-#define SET_INNER_COL(hsv)	\
-	{33, 4, hsv}, \
-	  {LEFTRIGHT_SPLIT+ 33, NUM_OUTER_FN_KEYS, hsv}
+    {NUM_PER_SIDE, NUM_INDICATORS, hsv}
 
+// Set the LEDs for the underglow leds
+#define SET_UNDERGLOW(hsv) \
+	{START_UNDERGLOW, NUM_UNDERGLOW, hsv}, \
+    {NUM_PER_SIDE+START_UNDERGLOW, NUM_UNDERGLOW, hsv}
+
+// Set the LEDs for the underglow leds
+#define SET_NUMPAD(hsv)     \
+	{NUM_PER_SIDE+16, 5, hsv},\
+	{NUM_PER_SIDE+25, 3, hsv},\
+	{NUM_PER_SIDE+28, 3, hsv}
+
+// Set the LEDs for the numrow leds
+#define SET_NUMROW(hsv) \
+	{11, 2, hsv}, \
+	{21, 2, hsv}, \
+	{31, 2, hsv}, \
+	{NUM_PER_SIDE+ 11, 2, hsv}, \
+	{NUM_PER_SIDE+ 21, 2, hsv}, \
+	{NUM_PER_SIDE+ 31, 2, hsv}
+
+/*
+// Set the LEDs for the outside column (columns 0 and 7)
 #define SET_OUTER_COL(hsv) \
-	{START_OUTER_FN_KEYS, NUM_OUTER_FN_KEYS, hsv}, \
-	  {LEFTRIGHT_SPLIT + START_OUTER_FN_KEYS, NUM_OUTER_FN_KEYS, hsv}
-#define SET_THUMB_CLUSTER(hsv) 	\
-	{START_THUMB, 2, hsv}, \
-	  {LEFTRIGHT_SPLIT+ START_THUMB, 2, hsv}
-#define SET_LAYER_ID(hsv) 	\
-	{0, NUM_INDICATORS, HSV_OVERRIDE_HELP(hsv, INDICATOR_BRIGHTNESS)}, \
-    {LEFTRIGHT_SPLIT+0, NUM_INDICATORS, HSV_OVERRIDE_HELP(hsv, INDICATOR_BRIGHTNESS)}, \
-		{NUM_INDICATORS, NUM_UNDERGLOW, hsv}, \
-    {LEFTRIGHT_SPLIT+NUM_INDICATORS, NUM_UNDERGLOW, hsv}, \
-	{START_OUTER_FN_KEYS, NUM_OUTER_FN_KEYS, hsv}, \
-	  {LEFTRIGHT_SPLIT + START_OUTER_FN_KEYS, NUM_OUTER_FN_KEYS, hsv}, \
-		{START_THUMB, 2, hsv}, \
-	  {LEFTRIGHT_SPLIT+ START_THUMB, 2, hsv}
+	{START_OUTER_FN_KEYS, NUM_OUTER_FN_KEYS, hsv},\
+	  {NUM_PER_SIDE + START_OUTER_FN_KEYS, NUM_OUTER_FN_KEYS, hsv}
 */
 
-// Patched light values from: https://github.com/josefadamcik/SofleKeyboard/pull/90#issuecomment-1001190698
-// Light combinations
-#define SET_INDICATORS(hsv) \
-	{0, 1, HSV_OVERRIDE_HELP(hsv, INDICATOR_BRIGHTNESS)}, \
-    {36+0, 1, hsv}
-#define SET_UNDERGLOW(hsv) \
-	{1, 6, hsv}, \
-    {36+1, 6,hsv}
-#define SET_NUMPAD(hsv)     \
-	{36+15, 5, hsv},\
-	  {36+22, 3, hsv},\
-	  {36+27, 3, hsv}
-#define SET_NUMROW(hsv) \
-	{10, 2, hsv}, \
-		{20, 2, hsv}, \
-		{30, 2, hsv}, \
-	  {36+ 10, 2, hsv}, \
-	  {36+ 20, 2, hsv}, \
-	  {36+ 30, 2, hsv}
-#define SET_INNER_COL(hsv)	\
-	{33, 4, hsv}, \
-	  {36+ 33, 4, hsv}
-
-#define SET_OUTER_COL(hsv) \
-	{8, 4, hsv}, \
-	  {36+ 8, 4, hsv}
+// Set the LEDs for the thumb cluster (only 2 keys near knob)
 #define SET_THUMB_CLUSTER(hsv) 	\
-	{26, 2, hsv}, \
-	  {36+ 26, 2, hsv}
+    {26, 2, hsv}
+    // {NUM_PER_SIDE + 26, 2, hsv}
+
+// Set the LEDs for the thumb cluster
+#define SET_THUMB_CLUSTER_FULL(hsv) 	\
+    {7, 1, hsv},\
+    {16, 2, hsv},\
+    {26, 2, hsv}
+    // {NUM_PER_SIDE + 7, 1, hsv},
+    // {NUM_PER_SIDE + 16, 2, hsv},
+    // {NUM_PER_SIDE + 26, 2, hsv}
+
+// Set all LEDs outside of alpha keys
 #define SET_LAYER_ID(hsv) 	\
-	{0, 1, HSV_OVERRIDE_HELP(hsv, INDICATOR_BRIGHTNESS)}, \
-    {36+0, 1, HSV_OVERRIDE_HELP(hsv, INDICATOR_BRIGHTNESS)}, \
-		{1, 6, hsv}, \
-    {36+1, 6, hsv}, \
-		{8, 4, hsv}, \
-	  {36+ 8, 4, hsv}, \
-		{26, 2, hsv}, \
-	  {36+ 26, 2, hsv}
+	{0, NUM_INDICATORS, HSV_OVERRIDE_HELP(hsv, INDICATOR_BRIGHTNESS)}, \
+	{START_UNDERGLOW, NUM_UNDERGLOW, hsv}, \
+	{START_OUTER_FN_KEYS, NUM_OUTER_FN_KEYS, hsv}, \
+    {7, 1, hsv},\
+    {16, 2, hsv},\
+    {26, 2, hsv},\
+      {NUM_PER_SIDE+0, NUM_INDICATORS, HSV_OVERRIDE_HELP(hsv, INDICATOR_BRIGHTNESS)}, \
+      {NUM_PER_SIDE+START_UNDERGLOW, NUM_UNDERGLOW, hsv},\
+	  {NUM_PER_SIDE + START_OUTER_FN_KEYS, NUM_OUTER_FN_KEYS, hsv},\
+    {NUM_PER_SIDE + 7, 1, hsv},\
+    {NUM_PER_SIDE + 16, 2, hsv},\
+    {NUM_PER_SIDE + 26, 2, hsv}
 
 enum sofle_layers {
     _DEFAULTS = 0,
@@ -247,7 +277,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,------------------------------------------------.                    ,---------------------------------------------------.
   _______,  KC_F1,  KC_F2,   KC_F3,   KC_F4,   KC_F5,                     KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,
   //|------+-------+--------+--------+--------+------|                   |--------+-------+--------+--------+--------+---------|
-  KC_GRV,   KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                      KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   KC_BSPC,
+  KC_GRV,   KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                      KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   KC_F12,
   //|------+-------+--------+--------+--------+------|                   |--------+-------+--------+--------+--------+---------|
   _______,  KC_NO,  KC_NO,   KC_NO,   KC_WH_U, KC_PGUP,                   KC_LEFT, KC_DOWN, KC_UP,  KC_RGHT, KC_NO,   KC_DEL,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+-------+--------+--------+--------+---------|
