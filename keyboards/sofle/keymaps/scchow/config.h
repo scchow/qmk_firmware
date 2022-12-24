@@ -133,3 +133,10 @@ Appled modifications based on: https://github.com/josefadamcik/SofleKeyboard/pul
  // #   undef ENABLE_RGB_MATRIX_SOLID_SPLASH
  // #   undef ENABLE_RGB_MATRIX_SOLID_MULTISPLASH
 #endif
+
+//   #define OLED_DISPLAY_128X32
+//   #define OLED_TIMEOUT 300000
+
+
+#define SPLIT_WPM_ENABLE
+#define SPLIT_OLED_ENABLE
