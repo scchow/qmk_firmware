@@ -237,7 +237,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // For LED turn off feature
     if (record->event.pressed) {
         #ifdef RGBLIGHT_ENABLE
-        rgb_idle_key_pressed();
+            rgb_idle_key_pressed();
         #endif
     }
 

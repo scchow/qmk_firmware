@@ -1,4 +1,8 @@
-#ifdef ENCODER_ENABLE
+#pragma once
+
+#include QMK_KEYBOARD_H
+#include "enums.h"
+
 bool encoder_update_user(uint8_t index, bool clockwise) {
     // Left encoder controls volume
     if (index == 0){
@@ -32,4 +36,4 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
     }
     return true;
 }
-#endif
+
