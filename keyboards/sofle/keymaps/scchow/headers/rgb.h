@@ -8,6 +8,10 @@
 #define HSV_OVERRIDE_HELP(h, s, v, Override) h, s , Override
 #define HSV_OVERRIDE(hsv, Override) HSV_OVERRIDE_HELP(hsv,Override)
 
+// Backlight timeout feature
+static uint32_t idle_timer = 0; // time since last keypress in milliseconds
+static bool rgb_on = true;
+
 
 /* LED Indices for Sofle RGB v3.0
  *
@@ -188,13 +192,8 @@ const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
 // 	rgblight_set_layer_state(5, layer_state_cmp(state, _SWITCH));
 //     return state;
 // }
-void keyboard_post_init_user(void) {
-    // Enable the LED layers
-    rgblight_layers = my_rgb_layers;
 
-	rgblight_mode(10);// haven't found a way to set this in a more useful way
 
-}
 
 void rgblight_set_based_on_layer(layer_state_t state){
 	rgblight_set_layer_state(0, layer_state_cmp(state, _DEFAULTS) && layer_state_cmp(default_layer_state,_BASE));
@@ -204,4 +203,45 @@ void rgblight_set_based_on_layer(layer_state_t state){
 	rgblight_set_layer_state(5, layer_state_cmp(state, _GAME2));
 	rgblight_set_layer_state(4, layer_state_cmp(state, _NUMPAD));
 	// rgblight_set_layer_state(5, layer_state_cmp(state, _SWITCH));
+}
+
+
+void rgb_idle_init_timer(void){
+    idle_timer = timer_read();
+}
+
+void rgb_idle_key_pressed(void){
+    // we just pressed a key, so turn on rgb if it was off
+    if (rgb_on == false) {
+        rgblight_enable_noeeprom();
+        rgb_on = true;
+    }
+    // reset the idle timer
+    idle_timer = timer_read();
+}
+
+void rgb_idle_check_timer(void){
+    // idle_timer needs to be set one time
+    // if (idle_timer == 0){
+    //     idle_timer = timer_read();
+    // }
+
+    // If the leds are on and no key has been pressed for since the timeout
+    // save the rgb states, turn the leds off
+    if ( rgb_on && timer_elapsed(idle_timer) >= RGBLIGHT_TIMEOUT) {
+        rgblight_disable_noeeprom();
+        rgb_on = false;
+    }
+}
+
+
+void rgb_init(void){
+    // Enable the LED layers
+    rgblight_layers = my_rgb_layers;
+
+	rgblight_mode(10);// haven't found a way to set this in a more useful way
+
+    // start the idle timer
+    rgb_idle_init_timer();
+
 }

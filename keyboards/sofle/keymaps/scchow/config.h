@@ -1,4 +1,4 @@
- /* Copyright 2021 Dane Evans
+ /* Copyright 2022 Scott Chow, 2021 Dane Evans
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,10 @@
 
 
 /*
-Copied from rgb_default/config.h
-Appled modifications based on: https://github.com/josefadamcik/SofleKeyboard/pull/90#issuecomment-999033489
-*/
-  #pragma once
+ * This config was based on rgb_default/config.h
+ * Applied modifications based on: https://github.com/josefadamcik/SofleKeyboard/pull/90#issuecomment-999033489
+ */
+#pragma once
 
 
 //#define USE_MATRIX_I2C
@@ -54,13 +54,22 @@ Appled modifications based on: https://github.com/josefadamcik/SofleKeyboard/pul
 #define RGB_DI_PIN D3
 
 
-#ifdef RGB_MATRIX_ENABLE
-#define RGBLED_NUM 37    // Number of LEDs, see keymap.c for matching value
-#define DRIVER_LED_TOTAL RGBLED_NUM
-#endif
-
 #ifdef RGBLIGHT_ENABLE
+
+    // RGB timeout custom code implemented in headers/rgb.h
+    #define RGBLIGHT_TIMEOUT 60*1000    // in milliseconds
+
     #undef RGBLED_NUM
+    #define RGBLED_NUM 74 // was original 70, wasn't changed in Cirromulus' patch, but let's see
+	//#define RGBLED_SPLIT
+	#define RGBLED_SPLIT { 37, 37 } // haven't figured out how to use this yet
+
+	//#define RGBLED_NUM 30
+    #define RGBLIGHT_LIMIT_VAL 120
+    #define RGBLIGHT_HUE_STEP 10
+    #define RGBLIGHT_SAT_STEP 17
+    #define RGBLIGHT_VAL_STEP 17
+
 
     //#define RGBLIGHT_ANIMATIONS
 	//#define RGBLIGHT_EFFECT_BREATHING
@@ -74,15 +83,20 @@ Appled modifications based on: https://github.com/josefadamcik/SofleKeyboard/pul
 	//#define RGBLIGHT_EFFECT_ALTERNATING
 	//#define RGBLIGHT_EFFECT_TWINKLE
 
-    #define RGBLED_NUM 74 // was original 70, wasn't changed in Cirromulus' patch, but let's see
-	//#define RGBLED_SPLIT
-	#define RGBLED_SPLIT { 37, 37 } // haven't figured out how to use this yet
+#endif
 
-	//#define RGBLED_NUM 30
-    #define RGBLIGHT_LIMIT_VAL 120
-    #define RGBLIGHT_HUE_STEP 10
-    #define RGBLIGHT_SAT_STEP 17
-    #define RGBLIGHT_VAL_STEP 17
+// OLED display size and timeout
+#define OLED_DISPLAY_128X32  // Sofle has a 128x32 display
+#define OLED_TIMEOUT 60*1000 // Turn off oled after this many miliseconds of inactivity
+
+// Enable OLEDs and words per minute tracking for split keyboards
+#define SPLIT_WPM_ENABLE
+#define SPLIT_OLED_ENABLE
+
+
+#ifdef RGB_MATRIX_ENABLE
+#define RGBLED_NUM 37    // Number of LEDs, see keymap.c for matching value
+#define DRIVER_LED_TOTAL RGBLED_NUM
 #endif
 
 #ifdef RGB_MATRIX_ENABLE
@@ -134,9 +148,4 @@ Appled modifications based on: https://github.com/josefadamcik/SofleKeyboard/pul
  // #   undef ENABLE_RGB_MATRIX_SOLID_MULTISPLASH
 #endif
 
-//   #define OLED_DISPLAY_128X32
-//   #define OLED_TIMEOUT 300000
 
-
-#define SPLIT_WPM_ENABLE
-#define SPLIT_OLED_ENABLE

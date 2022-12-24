@@ -206,6 +206,18 @@ LT(_GAME2,KC_ESC),  KC_A,     KC_S,     KC_D,     KC_F,      KC_G,              
 #endif
 
 
+void keyboard_post_init_user() {
+    #ifdef RGBLIGHT_ENABLE
+        // initialize RGBLight layers
+        rgb_init();
+    #endif
+}
+
+void matrix_scan_user(void) {
+    #ifdef RGBLIGHT_ENABLE
+        rgb_idle_check_timer();
+    #endif
+}
 
 layer_state_t layer_state_set_user(layer_state_t state) {
 
@@ -221,6 +233,16 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+
+    // For LED turn off feature
+    if (record->event.pressed) {
+        #ifdef RGBLIGHT_ENABLE
+        rgb_idle_key_pressed();
+        #endif
+    }
+
+
+
     switch (keycode) {
         case KC_BASE:
             if (record->event.pressed) {
