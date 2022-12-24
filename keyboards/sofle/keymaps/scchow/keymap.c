@@ -22,7 +22,7 @@ Applied modifications based on: https://github.com/josefadamcik/SofleKeyboard/pu
 
 #include QMK_KEYBOARD_H
 
-#include "enums.h"
+#include "headers/enums.h"
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*
@@ -193,16 +193,16 @@ LT(_GAME2,KC_ESC),  KC_A,     KC_S,     KC_D,     KC_F,      KC_G,              
 };
 
 #ifdef RGBLIGHT_ENABLE
-    #include "rgb.h"
+    #include "headers/rgb.h"
 #endif
 
 #ifdef OLED_ENABLE
-    #include "oled.h"
+    #include "headers/oled.h"
 #endif
 
 
 #ifdef ENCODER_ENABLE
-    #include "encoders.h"
+    #include "headers/encoders.h"
 #endif
 
 
@@ -214,6 +214,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     #ifdef RGBLIGHT_ENABLE
         rgblight_set_based_on_layer(state);
     #endif
+
     return state;
 }
 
