@@ -22,9 +22,6 @@ Applied modifications based on: https://github.com/josefadamcik/SofleKeyboard/pu
 */
 
 #include <stdio.h>
-#ifdef OLED_ENABLE
-#include "bongocat.h"
-#endif
 
 #include QMK_KEYBOARD_H
 
@@ -102,6 +99,7 @@ Applied modifications based on: https://github.com/josefadamcik/SofleKeyboard/pu
     {NUM_PER_SIDE+START_UNDERGLOW, NUM_UNDERGLOW, hsv}
 
 // Set the LEDs for the underglow leds
+// TODO: Check these because they might be incorrect
 #define SET_NUMPAD(hsv)     \
 	{NUM_PER_SIDE+16, 5, hsv},\
 	{NUM_PER_SIDE+25, 3, hsv},\
@@ -151,9 +149,6 @@ Applied modifications based on: https://github.com/josefadamcik/SofleKeyboard/pu
     {NUM_PER_SIDE + 7, 1, hsv},\
     {NUM_PER_SIDE + 16, 2, hsv},\
     {NUM_PER_SIDE + 26, 2, hsv}
-
-// String for holding WPM
-char wpm_str[10];
 
 enum sofle_layers {
     _DEFAULTS = 0,
@@ -425,60 +420,49 @@ void keyboard_post_init_user(void) {
 #endif
 
 #ifdef OLED_ENABLE
+#include "bongocat.h"
 
-// static void render_logo(void) {
-//     static const char PROGMEM qmk_logo[] = {
-//         0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F, 0x90, 0x91, 0x92, 0x93, 0x94,
-//         0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xAB, 0xAC, 0xAD, 0xAE, 0xAF, 0xB0, 0xB1, 0xB2, 0xB3, 0xB4,
-//         0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF, 0xD0, 0xD1, 0xD2, 0xD3, 0xD4, 0x00
-//     };
+// int/String for holding WPM
+uint8_t wpm_int = 0;
+char wpm_str[4] = {'0', '0', '0', '\0'};
 
-//     oled_write_P(qmk_logo, false);
-// }
+const PROGMEM char *wpm_status_str = PSTR("\n\nScottChow\n\n\nWPM\n\n");
+const PROGMEM char *layer_status_str = PSTR("\n\nLAYER\n");
 
-static void print_status_narrow(void) {
-    // Print current mode
-    oled_write_P(PSTR("\n\n"), false);
-    oled_write_ln_P(PSTR("Scott\nChow"), false);
+static void print_status_narrow(uint8_t wpm){
+    // Print status message
+    oled_write_P(wpm_status_str, false);
 
-    oled_write_ln_P(PSTR(""), false);
+    // Safer wpm printing from:
+    //https://github.com/saikocat/keebs/blob/master/docs/qmk_missing_guide/oled.md#wpm-display-optimization
+    wpm_str[0] = '0' + wpm / 100; // hundred's digit place
+    wpm_str[1] = '0' + (wpm / 10) % 10; // ten's digit place
+    wpm_str[2] = '0' + wpm % 10; // single digit place
+    oled_write_ln(wpm_str, false);
 
-	//snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Undef-%ld", layer_state)
-    sprintf(wpm_str, "WPM: %03d", get_current_wpm());
-    oled_write_ln_P(PSTR(wpm_str), false);
-
-
-    // switch (get_highest_layer(default_layer_state)) {
-    //     case _BASE:
-    //         oled_write_ln_P(PSTR("Qwrt"), false);
-    //         break;
-    //     default:
-    //         oled_write_ln_P(PSTR("Undef"), false);
-    // }
-    oled_write_P(PSTR("\n\n"), false);
     // Print current layer
-    oled_write_ln_P(PSTR("LAYER"), false);
+    oled_write_P(layer_status_str, false);
     switch (get_highest_layer(layer_state)) {
         case _BASE:
-            oled_write_P(PSTR("Base"), false);
+            oled_write_ln("Base", false);
             break;
         case _NAV:
-            oled_write_P(PSTR("Nav\n"), false);
+            oled_write_ln("Nav", false);
             break;
         case _NAV2:
-            oled_write_P(PSTR("Nav2\n"), false);
+            oled_write_ln("Nav2", false);
             break;
         case _GAME:
-            oled_write_P(PSTR("Game\n"), false);
+            oled_write_ln("Game", false);
             break;
         case _GAME2:
-            oled_write_P(PSTR("Game2\n"), false);
+            oled_write_ln("Game2", false);
             break;
         case _NUMPAD:
-            oled_write_P(PSTR("Nump\n"), false);
+            oled_write_ln("Nump", false);
             break;
         default:
-            oled_write_ln_P(PSTR("Undef"), false);
+            oled_write_ln("Undef", false);
     }
 }
 
@@ -490,16 +474,14 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 }
 
 bool oled_task_user(void) {
+    wpm_int = get_current_wpm();
     // render status on master
     if (is_keyboard_master()) {
-        print_status_narrow();
+        print_status_narrow(wpm_int);
     }
     // render logo on secondary
     else {
-        render_anim();
-        // oled_set_cursor(0,6);
-        // sprintf(wpm_str, "       WPM: %03d", get_current_wpm());
-        // oled_write(wpm_str, false);
+        render_anim(wpm_int);
     }
     return false;
 }
@@ -558,31 +540,35 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef ENCODER_ENABLE
 
 bool encoder_update_user(uint8_t index, bool clockwise) {
-    if (index == 0) {
+    // Left encoder controls volume
+    if (index == 0){
         if (clockwise) {
             tap_code(KC_VOLU);
-        } else {
+        }
+        else{
             tap_code(KC_VOLD);
         }
-		} else if (index == 1) {
-			switch (get_highest_layer(layer_state)) {
-				case _BASE:
-				break;
-			// case _BASE:
-			// 		if (clockwise) {
-			// 			tap_code(KC_WH_D);
-			// 		} else {
-			// 			tap_code(KC_WH_U);
-			// 		}
-			// 	break;
-			default:
-					if (clockwise) {
-						tap_code(KC_WH_D);
-					} else {
-						tap_code(KC_WH_U);
-					}
-				break;
 		}
+    // Right encoder scrolls (on all layers)
+    else if (index == 1) {
+        // switch (get_highest_layer(layer_state)) {
+            // case _BASE:
+            //     break;
+            // case _BASE:
+            // 		if (clockwise) {
+            // 			tap_code(KC_WH_D);
+            // 		} else {
+            // 			tap_code(KC_WH_U);
+            // 		}
+            // 	break;
+            // default:
+                if (clockwise) {
+                    tap_code(KC_WH_D);
+                } else {
+                    tap_code(KC_WH_U);
+                }
+                // break;
+        // }
     }
     return true;
 }
