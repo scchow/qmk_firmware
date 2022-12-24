@@ -1,8 +1,5 @@
-// Based on https://github.com/aseiger/qmk_firmware/blob/aseiger_dev/keyboards/gingham/keymaps/aseiger_bongocat/keymap.c
-
-
+#pragma once
 #include QMK_KEYBOARD_H
-#include <stdio.h>
 
 // WPM-responsive animation stuff here
 #define IDLE_FRAMES 5
@@ -17,12 +14,7 @@
 // #define SLEEP_TIMER 60000 // should sleep after this period of 0 wpm, needs fixing
 #define ANIM_SIZE 512 // number of bytes in array, minimize for adequate firmware size, max is 1024
 
-uint32_t anim_timer = 0;
-uint32_t anim_sleep = 0;
-uint8_t current_idle_frame = 0;
-// uint8_t current_prep_frame = 0; // uncomment if PREP_FRAMES >1
-uint8_t current_tap_frame = 0;
-
+// Images credit j-inc(/James Incandenza) and pixelbenny.
 static const char PROGMEM idle[IDLE_FRAMES][ANIM_SIZE] = {
     {
         0,  0,  0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,128, 64, 64, 32, 32, 32, 32, 16, 16, 16, 16, 16,  8,  8,  4,  4,  4,  8, 48, 64,128,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,128,128,128,
@@ -78,6 +70,12 @@ static const char PROGMEM tap[TAP_FRAMES][ANIM_SIZE] = {
     },
 };
 
+uint32_t anim_timer = 0;
+uint32_t anim_sleep = 0;
+uint8_t current_idle_frame = 0;
+// uint8_t current_prep_frame = 0; // uncomment if PREP_FRAMES >1
+uint8_t current_tap_frame = 0;
+
 //assumes 1 frame prep stage
 void animation_phase(uint8_t wpm) {
     if(wpm <=IDLE_SPEED){
@@ -93,36 +91,3 @@ void animation_phase(uint8_t wpm) {
             oled_write_raw_P(tap[abs((TAP_FRAMES-1)-current_tap_frame)], ANIM_SIZE);
         }
 }
-
-// Images credit j-inc(/James Incandenza) and pixelbenny. Credit to obosob for initial animation approach.
-static void render_anim(uint8_t wpm) {
-
-    if(timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
-        anim_timer = timer_read32();
-        animation_phase(wpm);
-    }
-
-    /* Fix Screen on off bug from:
-    https://github.com/HellSingCoder/qmk_firmware/blob/master/keyboards/sofle/keymaps/helltm/keymap.c
-    */
-
-    // if(get_current_wpm() > 0) {
-    //     oled_on(); // not essential but turns on animation OLED with any alpha keypress
-    //     anim_sleep = timer_read32();
-    // } else if (timer_elapsed32(anim_sleep) > OLED_TIMEOUT) {
-    //         oled_off();
-    // }
-
-    // Above fix didn't work
-    /*
-    Saw waffle try to fix it here:
-    https://github.com/waffle87/qmk_firmware/blob/waffle/users/waffle/oled.c
-
-    they handle oled on and off in oled_task_user()
-    but I remember that the oled turns off without my prompting earlier.
-    maybe this oled on/off is handled elsewhere in the hierarchy and we don't need to manually turn it on/off here
-    Commented out this part and the flickering issue is solved!
-    */
-
-}
-

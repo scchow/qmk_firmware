@@ -24,6 +24,7 @@ Applied modifications based on: https://github.com/josefadamcik/SofleKeyboard/pu
 #include <stdio.h>
 
 #include QMK_KEYBOARD_H
+#include "enums.h"
 
 #define INDICATOR_BRIGHTNESS 30
 #define HSV_OVERRIDE_HELP(h, s, v, Override) h, s , Override
@@ -149,22 +150,6 @@ Applied modifications based on: https://github.com/josefadamcik/SofleKeyboard/pu
     {NUM_PER_SIDE + 7, 1, hsv},\
     {NUM_PER_SIDE + 16, 2, hsv},\
     {NUM_PER_SIDE + 26, 2, hsv}
-
-enum sofle_layers {
-    _DEFAULTS = 0,
-    _BASE = 0,
-    _NAV,
-    _NAV2,
-    _GAME,
-    _GAME2,
-    _NUMPAD,
-    _SWITCH
-};
-
-enum custom_keycodes {
-    KC_BASE = SAFE_RANGE,
-    KC_D_MUTE
-};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*
@@ -420,72 +405,7 @@ void keyboard_post_init_user(void) {
 #endif
 
 #ifdef OLED_ENABLE
-#include "bongocat.h"
-
-// int/String for holding WPM
-uint8_t wpm_int = 0;
-char wpm_str[4] = {'0', '0', '0', '\0'};
-
-const PROGMEM char *wpm_status_str = PSTR("\n\nScottChow\n\n\nWPM\n\n");
-const PROGMEM char *layer_status_str = PSTR("\n\nLAYER\n");
-
-static void print_status_narrow(uint8_t wpm){
-    // Print status message
-    oled_write_P(wpm_status_str, false);
-
-    // Safer wpm printing from:
-    //https://github.com/saikocat/keebs/blob/master/docs/qmk_missing_guide/oled.md#wpm-display-optimization
-    wpm_str[0] = '0' + wpm / 100; // hundred's digit place
-    wpm_str[1] = '0' + (wpm / 10) % 10; // ten's digit place
-    wpm_str[2] = '0' + wpm % 10; // single digit place
-    oled_write_ln(wpm_str, false);
-
-    // Print current layer
-    oled_write_P(layer_status_str, false);
-    switch (get_highest_layer(layer_state)) {
-        case _BASE:
-            oled_write_ln("Base", false);
-            break;
-        case _NAV:
-            oled_write_ln("Nav", false);
-            break;
-        case _NAV2:
-            oled_write_ln("Nav2", false);
-            break;
-        case _GAME:
-            oled_write_ln("Game", false);
-            break;
-        case _GAME2:
-            oled_write_ln("Game2", false);
-            break;
-        case _NUMPAD:
-            oled_write_ln("Nump", false);
-            break;
-        default:
-            oled_write_ln("Undef", false);
-    }
-}
-
-oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-    if (is_keyboard_master()) {
-        return OLED_ROTATION_270;
-    }
-    return rotation;
-}
-
-bool oled_task_user(void) {
-    wpm_int = get_current_wpm();
-    // render status on master
-    if (is_keyboard_master()) {
-        print_status_narrow(wpm_int);
-    }
-    // render logo on secondary
-    else {
-        render_anim(wpm_int);
-    }
-    return false;
-}
-
+    #include "oled.h"
 #endif
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
