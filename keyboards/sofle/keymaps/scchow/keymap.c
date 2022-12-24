@@ -200,6 +200,13 @@ LT(_GAME2,KC_ESC),  KC_A,     KC_S,     KC_D,     KC_F,      KC_G,              
     #include "oled.h"
 #endif
 
+
+#ifdef ENCODER_ENABLE
+    #include "encoders.h"
+#endif
+
+
+
 layer_state_t layer_state_set_user(layer_state_t state) {
 
     // state = update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
@@ -260,41 +267,3 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return true;
 }
-
-#ifdef ENCODER_ENABLE
-
-bool encoder_update_user(uint8_t index, bool clockwise) {
-    // Left encoder controls volume
-    if (index == 0){
-        if (clockwise) {
-            tap_code(KC_VOLU);
-        }
-        else{
-            tap_code(KC_VOLD);
-        }
-		}
-    // Right encoder scrolls (on all layers)
-    else if (index == 1) {
-        // switch (get_highest_layer(layer_state)) {
-            // case _BASE:
-            //     break;
-            // case _BASE:
-            // 		if (clockwise) {
-            // 			tap_code(KC_WH_D);
-            // 		} else {
-            // 			tap_code(KC_WH_U);
-            // 		}
-            // 	break;
-            // default:
-                if (clockwise) {
-                    tap_code(KC_WH_D);
-                } else {
-                    tap_code(KC_WH_U);
-                }
-                // break;
-        // }
-    }
-    return true;
-}
-
-#endif
