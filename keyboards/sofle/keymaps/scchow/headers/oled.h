@@ -3,6 +3,11 @@
 // include oled driver from qmk_firmware/drivers/oled/oled_driver.h
 #include "oled_driver.h"
 
+// TODO Might not be necessary...
+#ifdef EE_HANDS
+    #include "eeconfig.h"
+#endif
+
 // Include layer names
 #include "enums.h"
 
@@ -73,22 +78,21 @@ static void render_anim(uint8_t wpm) {
 }
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-    if (is_keyboard_master()) {
+    if (is_keyboard_left()) {
         return OLED_ROTATION_270;
     }
-    return rotation + OLED_ROTATION_180;
+    return OLED_ROTATION_180;
 }
 
 // Actually render the oled images
 bool oled_task_user(void) {
     wpm_int = get_current_wpm();
 
-    // render status on master
-    if (is_keyboard_master()) {
+    // render status on left side
+    if (is_keyboard_left()) {
         print_status_narrow(wpm_int);
     }
-
-    // render logo on secondary
+    // render logo on right side
     else {
         render_anim(wpm_int);
     }

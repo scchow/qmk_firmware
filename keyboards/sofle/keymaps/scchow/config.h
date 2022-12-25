@@ -29,9 +29,9 @@
 ///https://thomasbaart.nl/2018/12/01/reducing-firmware-size-in-qmk/
 
 
-#define MASTER_LEFT
+// #define MASTER_LEFT
 // #define MASTER_RIGHT
-// #define EE_HANDS
+#define EE_HANDS
 
 #define CUSTOM_FONT
 
@@ -92,7 +92,17 @@
 // Enable OLEDs and words per minute tracking for split keyboards
 #define SPLIT_WPM_ENABLE
 #define SPLIT_OLED_ENABLE
+// #define SPLIT_LAYER_STATE_ENABLE
+// #define SPLIT_LED_STATE_ENABLE
+// #define SPLIT_MODS_ENABLE
+#define FORCE_NKRO
 
+
+
+
+/* 
+ * RGB Matrix stuff (not used for sofle)
+ */
 
 #ifdef RGB_MATRIX_ENABLE
 #define RGBLED_NUM 37    // Number of LEDs, see keymap.c for matching value

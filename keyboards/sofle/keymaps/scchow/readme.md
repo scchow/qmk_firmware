@@ -8,3 +8,17 @@ To build QMK for the rp2040, use the following:
 qmk compile -kb sofle/rev1 -km scchow -e CONVERT_TO=promicro_rp2040
 ```
 
+Auto Detection of Handedness
+---
+
+In config.h, instead of setting `#define MASTER_LEFT` or `#define MASTER_RIGHT`, one can encode handedness in EEPROM.
+In `config.h`, uncomment `#define EE_HANDS` and comment out `#define MASTER_LEFT`/`#define MASTER_RIGHT`. 
+Then flash each side with the corresponding commands:
+```
+ make sofle:scchow:uf2-split-left
+```
+and 
+```
+ make sofle:scchow:uf2-split-left
+```
+Left/Right should be written into EEPROM and should persist unless EEPROM is wiped.
