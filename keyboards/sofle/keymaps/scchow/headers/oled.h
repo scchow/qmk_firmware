@@ -3,11 +3,6 @@
 // include oled driver from qmk_firmware/drivers/oled/oled_driver.h
 #include "oled_driver.h"
 
-// TODO Might not be necessary...
-#ifdef EE_HANDS
-    #include "eeconfig.h"
-#endif
-
 // Include layer names
 #include "enums.h"
 
