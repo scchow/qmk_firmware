@@ -76,7 +76,7 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     if (is_keyboard_master()) {
         return OLED_ROTATION_270;
     }
-    return rotation;
+    return rotation + OLED_ROTATION_180;
 }
 
 // Actually render the oled images
