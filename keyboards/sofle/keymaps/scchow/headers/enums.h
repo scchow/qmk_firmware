@@ -16,3 +16,7 @@ enum custom_keycodes {
     KC_BASE = SAFE_RANGE,
     KC_D_MUTE
 };
+
+enum {
+    TD_LCTL_LALT,
+};

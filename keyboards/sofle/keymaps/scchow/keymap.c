@@ -23,6 +23,7 @@ Applied modifications based on: https://github.com/josefadamcik/SofleKeyboard/pu
 #include QMK_KEYBOARD_H
 
 #include "headers/enums.h"
+#include "headers/tap_dance.h"
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*
@@ -50,7 +51,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+-------+--------+--------+--------+------|  ===  |  |  ===  |--------+-------+--------+--------+--------+---------|
   KC_LSFT, KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,  QK_BOOT,    QK_BOOT, KC_N,    KC_M,   KC_COMM, KC_DOT,  KC_SLSH, KC_ENT,
   //|------+-------+--------+--------+--------+------|  ===  |  |  ===  |--------+-------+----------+--------+--------+---------|
-                  KC_LALT, KC_LGUI, TT(_NAV),   KC_SPC,KC_LCTL,  KC_BSPC, KC_SPC, KC_ENT, KC_DEL, TG(_GAME)
+                  KC_LALT, KC_LGUI, TT(_NAV),  KC_SPC,TD(TD_LCTL_LALT),  KC_BSPC, KC_SPC, KC_ENT, KC_DEL, TG(_GAME)
   //            \--------+--------+--------+---------+-------|  |-------+--------+--------+---------+-------/
 ),
 
@@ -78,7 +79,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+-----------+-----------+-----------+--------+--------|  ====  |   |  ===  |--------+-------+--------+--------+--------+---------|
 _______,LCTL(KC_Z), LCTL(KC_X), LCTL(KC_C), LCTL(KC_V), LCTL(KC_B), _______,   _______,   KC_NO, KC_UNDS,KC_PLUS, KC_LCBR, KC_RCBR,    KC_NO,
   //|------+-----------+-----------+-----------+--------+--------|  ====  |   |  ===  |--------+-------+--------+--------+--------+---------|
-                               _______, _______,  _______, _______,  _______,   KC_DEL, _______, _______, _______, _______
+                               _______, _______, TG(_NAV), _______,  _______,   KC_DEL, _______, _______, _______, _______
   //                         \--------+--------+--------+---------+-------|   |--------+---------+--------+---------+-------/
 ),
 
@@ -218,6 +219,7 @@ void matrix_scan_user(void) {
     #ifdef RGBLIGHT_ENABLE
         rgb_idle_check_timer();
     #endif
+    matrix_scan_user_encoder();
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {

@@ -15,7 +15,7 @@
 */
 
 
-/*
+/**
  * This config was based on rgb_default/config.h
  * Applied modifications based on: https://github.com/josefadamcik/SofleKeyboard/pull/90#issuecomment-999033489
  */

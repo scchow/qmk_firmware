@@ -9,6 +9,8 @@ OLED_DRIVER = SSD1306
 WPM_ENABLE = yes
 NKRO_ENABLE = yes
 SPLIT_KEYBOARD = yes
+TAP_DANCE_ENABLE = yes
+
 # Special commands for Elite-Pi compatibility
 BOOTLOADER = rp2040
 CONVERT_TO = promicro_rp2040
