@@ -8,7 +8,8 @@ enum sofle_layers {
     _GAME,
     _GAME2,
     _NUMPAD,
-    _SWITCH
+    _SWITCH,
+    _CONFIG
 };
 
 enum custom_keycodes {
