@@ -6,6 +6,9 @@
 // Include layer names
 #include "enums.h"
 
+// Include idle timer
+#include "idle_timer.h"
+
 // Include bongo cat data
 #include "data/bongo_cat.h"
 
@@ -19,7 +22,6 @@ const PROGMEM char *layer_status_str = PSTR("\n\nLAYER\n");
 
 // Timers for animation and sleeping
 uint32_t anim_timer = 0;
-uint32_t anim_sleep = 0;
 
 // Print the status bar message
 static void print_status_narrow(uint8_t wpm){
@@ -75,7 +77,6 @@ static void render_anim(uint8_t wpm) {
         animation_phase(wpm);
     }
 
-
 }
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
@@ -83,25 +84,16 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
         return OLED_ROTATION_270;
     }
     return OLED_ROTATION_180;
+
+    // start the idle timer
+    idle_timer_init();
+
 }
 
 // Actually render the oled images
 bool oled_task_user(void) {
 
     wpm_int = get_current_wpm();
-
-    // If we just typed stuff, oled should be on
-    if (wpm_int > 0) {
-        oled_on();
-        anim_sleep = timer_read32();
-    } 
-    // If we haven't typed anything in a while
-    // and we are past the OLED_TIMEOUT period, turn the oled off.
-    // For some reason, OLED_TIMEOUT just isn't obeyed,
-    // So we manually turn the OLED off ourselves.
-    else if (timer_elapsed32(anim_sleep) > OLED_TIMEOUT) {
-        oled_off();
-    }
 
     // Only try to render stuff on the oled if the oled is on
     // Somewhere, calling render_anim or print_status_narrow
@@ -121,3 +113,22 @@ bool oled_task_user(void) {
     return false;
 
 }
+
+void oled_idle_key_pressed(void){
+    // we just pressed a key, so turn on oled
+    oled_on();
+    // reset the idle timer
+    idle_timer_reset();
+}
+
+void oled_idle_check_timer(void){
+
+    // If we haven't typed anything in a while
+    // and we are past the OLED_TIMEOUT period, turn the oled off.
+    // For some reason, OLED_TIMEOUT just isn't obeyed,
+    // So we manually turn the OLED off ourselves.
+    if (is_oled_on() && idle_timer_check(OLED_TIMEOUT)) {
+        oled_off();
+    }
+}
+

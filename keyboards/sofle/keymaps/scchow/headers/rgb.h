@@ -8,8 +8,9 @@
 #define HSV_OVERRIDE_HELP(h, s, v, Override) h, s , Override
 #define HSV_OVERRIDE(hsv, Override) HSV_OVERRIDE_HELP(hsv,Override)
 
+#include "idle_timer.h"
+
 // RGB timeout feature
-static uint32_t rgb_idle_timer = 0; // time since last keypress in milliseconds
 static bool rgb_on = true;
 
 
@@ -205,26 +206,21 @@ void rgblight_set_based_on_layer(layer_state_t state){
 	// rgblight_set_layer_state(5, layer_state_cmp(state, _SWITCH));
 }
 
-
-void rgb_idle_init_timer(void){
-    rgb_idle_timer = timer_read32();
-}
-
 void rgb_idle_key_pressed(void){
     // we just pressed a key, so turn on rgb if it was off
-    if (rgb_on == false) {
+    if (!rgb_on) {
         rgblight_enable_noeeprom();
         rgb_on = true;
     }
     // reset the idle timer
-    rgb_idle_timer = timer_read32();
+    idle_timer_reset();
 }
 
 void rgb_idle_check_timer(void){
 
     // If the leds are on and no key has been pressed for since the timeout
     // save the rgb states, turn the leds off
-    if ( rgb_on && timer_elapsed32(rgb_idle_timer) >= RGBLIGHT_TIMEOUT) {
+    if ( rgb_on && idle_timer_check(RGBLIGHT_TIMEOUT)) {
         rgblight_disable_noeeprom();
         rgb_on = false;
     }
@@ -238,6 +234,6 @@ void rgb_init(void){
 	rgblight_mode(10);// haven't found a way to set this in a more useful way
 
     // start the idle timer
-    rgb_idle_init_timer();
+    idle_timer_init();
 
 }

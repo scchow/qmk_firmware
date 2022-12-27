@@ -219,6 +219,9 @@ void matrix_scan_user(void) {
     #ifdef RGBLIGHT_ENABLE
         rgb_idle_check_timer();
     #endif
+    #ifdef OLED_ENABLE
+        oled_idle_check_timer();
+    #endif
     matrix_scan_user_encoder();
 }
 
@@ -241,6 +244,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
         #ifdef RGBLIGHT_ENABLE
             rgb_idle_key_pressed();
+        #endif
+        #ifdef OLED_ENABLE
+            oled_idle_key_pressed();
         #endif
     }
 

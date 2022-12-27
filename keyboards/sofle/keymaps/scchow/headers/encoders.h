@@ -8,6 +8,15 @@
 #include QMK_KEYBOARD_H
 #include "enums.h"
 
+#ifdef RGBLIGHT_ENABLE
+    #include "rgb.h"
+#endif
+
+#ifdef OLED_ENABLE
+    #include "oled.h"
+#endif
+
+
 #define ALT_TAB_TIMEOUT 1250 // time to keep alt held when scrolling in milliseconds
 #define DETENTS_PER_TAB 2 // Number of encoder wheel detents for one alt-tab
 
@@ -75,6 +84,17 @@ void scroll(bool clockwise){
 }
 
 bool encoder_update_user(uint8_t index, bool clockwise) {
+
+
+    // Turn on RGB/OLED if they are enabled
+    #ifdef RGBLIGHT_ENABLE
+        rgb_idle_key_pressed();
+    #endif
+    #ifdef OLED_ENABLE
+        oled_idle_key_pressed();
+    #endif
+
+
     // Right encoder controls volume
     if (index == 1){
         if (clockwise) {

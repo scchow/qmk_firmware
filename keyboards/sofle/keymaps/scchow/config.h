@@ -57,7 +57,7 @@
 #ifdef RGBLIGHT_ENABLE
 
     // RGB timeout custom code implemented in headers/rgb.h
-    #define RGBLIGHT_TIMEOUT 5*1000    // in milliseconds
+    #define RGBLIGHT_TIMEOUT 60*1000    // in milliseconds
 
     #undef RGBLED_NUM
     #define RGBLED_NUM 74 // was original 70, wasn't changed in Cirromulus' patch, but let's see
@@ -93,7 +93,7 @@
 // to be activity, even idle animations!
 // At least that's the working hypothesis on why 
 // when the screen with the bongo cat is connected to the computer (thus is master), the oled does not turn off.
-#define OLED_TIMEOUT 5*1000
+#define OLED_TIMEOUT 60*1000
 // #ifdef OLED_TIMEOUT
 //     // We cannot rely on default OLED_TIMEOUT until it is patched.
 //     #undef OLED_TIMEOUT
