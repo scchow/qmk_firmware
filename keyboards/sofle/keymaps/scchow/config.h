@@ -101,8 +101,7 @@
 // #define OLED_TIMEOUT_CUSTOM 60*1000 
 
 // Enable OLEDs and words per minute tracking for split keyboards
-// #define OLED_ENABLE // this is needed for OLED status to be actually shared - maybe not
-
+// Choose what to share across the board
 #define SPLIT_WPM_ENABLE
 #define SPLIT_OLED_ENABLE
 // #define SPLIT_LAYER_STATE_ENABLE
@@ -111,7 +110,7 @@
 #define FORCE_NKRO
 
 // allow the keyboard to wake from sleep properly
-#define USB_SUSPEND_WAKEUP_DELAY 1000
+#define USB_SUSPEND_WAKEUP_DELAY 200
 
 /* 
  * RGB Matrix stuff (not used for sofle)
