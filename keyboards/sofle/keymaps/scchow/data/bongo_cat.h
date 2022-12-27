@@ -70,8 +70,6 @@ static const char PROGMEM tap[TAP_FRAMES][ANIM_SIZE] = {
     },
 };
 
-uint32_t anim_timer = 0;
-uint32_t anim_sleep = 0;
 uint8_t current_idle_frame = 0;
 // uint8_t current_prep_frame = 0; // uncomment if PREP_FRAMES >1
 uint8_t current_tap_frame = 0;

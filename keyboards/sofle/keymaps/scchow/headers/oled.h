@@ -17,6 +17,9 @@ char wpm_str[4] = {'0', '0', '0', '\0'};
 const PROGMEM char *wpm_status_str = PSTR("\n\nScottChow\n\n\nWPM\n\n");
 const PROGMEM char *layer_status_str = PSTR("\n\nLAYER\n");
 
+// Timers for animation and sleeping
+uint32_t anim_timer = 0;
+uint32_t anim_sleep = 0;
 
 // Print the status bar message
 static void print_status_narrow(uint8_t wpm){
@@ -65,11 +68,14 @@ static void print_status_narrow(uint8_t wpm){
 //   assumes animation_phase(wpm) has been defined in
 //   data/bongo_cat.h or whichever animation file you use
 static void render_anim(uint8_t wpm) {
-    //   Credit to obosob for initial animation approach.
+    
+    // Credit to obosob for initial animation approach.
     if(timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
         anim_timer = timer_read32();
         animation_phase(wpm);
     }
+
+
 }
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
@@ -81,16 +87,37 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 
 // Actually render the oled images
 bool oled_task_user(void) {
+
     wpm_int = get_current_wpm();
 
-    // render status on left side
-    if (is_keyboard_left()) {
-        print_status_narrow(wpm_int);
-    }
-    // render logo on right side
-    else {
-        render_anim(wpm_int);
+    // If we just typed stuff, oled should be on
+    if (wpm_int > 0) {
+        oled_on();
+        anim_sleep = timer_read32();
+    } 
+    // If we haven't typed anything in a while
+    // and we are past the OLED_TIMEOUT period, turn the oled off.
+    // For some reason, OLED_TIMEOUT just isn't obeyed,
+    // So we manually turn the OLED off ourselves.
+    else if (timer_elapsed32(anim_sleep) > OLED_TIMEOUT) {
+        oled_off();
     }
 
+    // Only try to render stuff on the oled if the oled is on
+    // Somewhere, calling render_anim or print_status_narrow
+    // when the oled is off will cause it to turn on again,
+    // Ignoring the OLED_TIMEOUT parameter.
+    if (is_oled_on()){
+        // render status on left side
+        if (is_keyboard_left()) {
+            print_status_narrow(wpm_int);
+        }
+        // render logo on right side
+        else {
+            // print_status_narrow(wpm_int);
+            render_anim(wpm_int);
+        }
+    }
     return false;
+
 }
