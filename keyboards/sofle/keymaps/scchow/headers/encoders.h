@@ -9,7 +9,7 @@
 #include "enums.h"
 
 #ifdef RGBLIGHT_ENABLE
-    #include "rgb.h"
+    #include "rgb_light.h"
 #endif
 
 #ifdef OLED_ENABLE

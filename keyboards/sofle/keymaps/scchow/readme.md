@@ -23,6 +23,12 @@ and
 ```
 Left/Right should be written into EEPROM and should persist unless EEPROM is wiped.
 
+# TODO: RGB Matrix Lighting
+
+Relevant links:
+- https://github.com/samhocevar-forks/qmk-firmware/blob/master/docs/feature_rgb_matrix.md
+- https://www.reddit.com/r/olkb/comments/sbvefp/has_anyone_gotten_qmk_rgb_matrix_effects_working/
+
 
 # Debugging Notes
 
