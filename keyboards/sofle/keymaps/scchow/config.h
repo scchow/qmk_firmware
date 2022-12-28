@@ -56,7 +56,6 @@
 
 #ifdef RGBLIGHT_ENABLE
 
-    // RGB timeout custom code implemented in headers/rgb.h
     #define RGBLIGHT_TIMEOUT 60*1000    // in milliseconds
 
     #undef RGBLED_NUM
