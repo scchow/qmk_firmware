@@ -71,16 +71,16 @@
 
 
     //#define RGBLIGHT_ANIMATIONS
-	//#define RGBLIGHT_EFFECT_BREATHING
+	#define RGBLIGHT_EFFECT_BREATHING
 	#define RGBLIGHT_EFFECT_RAINBOW_MOOD
-	//#define RGBLIGHT_EFFECT_RAINBOW_SWIRL
-	//#define RGBLIGHT_EFFECT_SNAKE
-	//#define RGBLIGHT_EFFECT_KNIGHT
-	//#define RGBLIGHT_EFFECT_CHRISTMAS
-	//#define RGBLIGHT_EFFECT_STATIC_GRADIENT
-	//#define RGBLIGHT_EFFECT_RGB_TEST
-	//#define RGBLIGHT_EFFECT_ALTERNATING
-	//#define RGBLIGHT_EFFECT_TWINKLE
+	#define RGBLIGHT_EFFECT_RAINBOW_SWIRL
+	#define RGBLIGHT_EFFECT_SNAKE
+	#define RGBLIGHT_EFFECT_KNIGHT
+	#define RGBLIGHT_EFFECT_CHRISTMAS
+	#define RGBLIGHT_EFFECT_STATIC_GRADIENT
+	// #define RGBLIGHT_EFFECT_RGB_TEST
+	#define RGBLIGHT_EFFECT_ALTERNATING
+	#define RGBLIGHT_EFFECT_TWINKLE
 
 #endif
 
@@ -90,28 +90,28 @@
 // We use our own version of OLED_TIMEOUT because
 // Default OLED_TIMEOUT considers changing animations
 // to be activity, even idle animations!
-// At least that's the working hypothesis on why 
+// At least that's the working hypothesis on why
 // when the screen with the bongo cat is connected to the computer (thus is master), the oled does not turn off.
 #define OLED_TIMEOUT 60*1000
 // #ifdef OLED_TIMEOUT
 //     // We cannot rely on default OLED_TIMEOUT until it is patched.
 //     #undef OLED_TIMEOUT
 // #endif
-// #define OLED_TIMEOUT_CUSTOM 60*1000 
+// #define OLED_TIMEOUT_CUSTOM 60*1000
 
 // Enable OLEDs and words per minute tracking for split keyboards
 // Choose what to share across the board
 #define SPLIT_WPM_ENABLE
 #define SPLIT_OLED_ENABLE
-// #define SPLIT_LAYER_STATE_ENABLE
-// #define SPLIT_LED_STATE_ENABLE
+#define SPLIT_LAYER_STATE_ENABLE
+#define SPLIT_LED_STATE_ENABLE
 // #define SPLIT_MODS_ENABLE
 #define FORCE_NKRO
 
 // allow the keyboard to wake from sleep properly
 #define USB_SUSPEND_WAKEUP_DELAY 3000
 
-/* 
+/*
  * RGB Matrix stuff (not used for sofle)
  */
 
