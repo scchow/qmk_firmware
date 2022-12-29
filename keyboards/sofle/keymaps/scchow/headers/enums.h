@@ -14,9 +14,8 @@ enum sofle_layers {
 
 enum custom_keycodes {
     KC_BASE = SAFE_RANGE,
-    KC_D_MUTE
+    KC_D_MUTE,
+    KC_NAV_1,
+    KC_NAV_2
 };
 
-enum {
-    TD_LCTL_LALT,
-};

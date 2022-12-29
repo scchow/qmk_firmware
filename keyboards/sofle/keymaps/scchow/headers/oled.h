@@ -56,6 +56,9 @@ static void print_status_narrow(uint8_t wpm){
         case _NUMPAD:
             oled_write_ln("Nump", false);
             break;
+        case _CONFIG:
+            oled_write_ln("Cnfig", false);
+            break;
         default:
             oled_write_ln("Undef", false);
     }
@@ -70,7 +73,7 @@ static void print_status_narrow(uint8_t wpm){
 //   assumes animation_phase(wpm) has been defined in
 //   data/bongo_cat.h or whichever animation file you use
 static void render_anim(uint8_t wpm) {
-    
+
     // Credit to obosob for initial animation approach.
     if(timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
         anim_timer = timer_read32();
