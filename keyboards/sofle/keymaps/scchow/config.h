@@ -56,6 +56,9 @@
 
 #ifdef RGBLIGHT_ENABLE
 
+    // We are using a split keyboard
+    #define RGBLIGHT_SPLIT
+
     #define RGBLIGHT_TIMEOUT 60*1000    // in milliseconds
 
     #undef RGBLED_NUM
