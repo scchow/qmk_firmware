@@ -8,7 +8,7 @@
 #define HSV_OVERRIDE_HELP(h, s, v, Override) h, s , Override
 #define HSV_OVERRIDE(hsv, Override) HSV_OVERRIDE_HELP(hsv,Override)
 
-
+// Timeout based on https://gist.github.com/aashreys/01cb34605a290a7cfb94a856bdabc94c
 #ifdef RGBLIGHT_TIMEOUT
     #include "idle_timer.h"
     // RGB timeout feature
@@ -215,7 +215,7 @@ void rgblight_set_based_on_layer(layer_state_t state){
 void rgb_idle_key_pressed(void){
     // we just pressed a key, so turn on rgb if it was off
     if (!rgb_on) {
-        rgblight_enable_noeeprom();
+        rgblight_wakeup();
         rgb_on = true;
     }
 
@@ -228,7 +228,7 @@ void rgb_idle_check_timer(void){
     // If the leds are on and no key has been pressed for since the timeout
     // save the rgb states, turn the leds off
     if ( rgb_on && idle_timer_check(RGBLIGHT_TIMEOUT)) {
-        rgblight_disable_noeeprom();
+        rgblight_suspend();
         rgb_on = false;
     }
 }

@@ -59,8 +59,9 @@
     // We are using a split keyboard
     #define RGBLIGHT_SPLIT
 
-    // #define RGBLIGHT_SLEEP  // allows us to use rgblight_suspend() and rgblight_wakeup() in keymap.c
-    // #define RGBLIGHT_TIMEOUT 60*1000    // in milliseconds
+    // RGB Timeout based on https://gist.github.com/aashreys/01cb34605a290a7cfb94a856bdabc94c
+    #define RGBLIGHT_SLEEP  // allows us to use rgblight_suspend() and rgblight_wakeup() in keymap.c
+    #define RGBLIGHT_TIMEOUT 60*1000    // in milliseconds
 
     // We have 74 LEDS on our board
     #define RGBLED_NUM 74 
