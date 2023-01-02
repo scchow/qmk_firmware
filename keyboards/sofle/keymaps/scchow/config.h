@@ -59,15 +59,15 @@
     // We are using a split keyboard
     #define RGBLIGHT_SPLIT
 
-    #define RGBLIGHT_TIMEOUT 60*1000    // in milliseconds
+    // #define RGBLIGHT_SLEEP  // allows us to use rgblight_suspend() and rgblight_wakeup() in keymap.c
+    // #define RGBLIGHT_TIMEOUT 60*1000    // in milliseconds
 
-    #undef RGBLED_NUM
-    #define RGBLED_NUM 74 // was original 70, wasn't changed in Cirromulus' patch, but let's see
-	//#define RGBLED_SPLIT
-	#define RGBLED_SPLIT { 37, 37 } // haven't figured out how to use this yet
+    // We have 74 LEDS on our board
+    #define RGBLED_NUM 74 
+    // With 37 LEDs on each side
+	#define RGBLED_SPLIT { 37, 37 }
 
-	//#define RGBLED_NUM 30
-    #define RGBLIGHT_LIMIT_VAL 120
+    #define RGBLIGHT_LIMIT_VAL 100 // limit the brightness
     #define RGBLIGHT_HUE_STEP 10
     #define RGBLIGHT_SAT_STEP 17
     #define RGBLIGHT_VAL_STEP 17
@@ -84,6 +84,11 @@
 	// #define RGBLIGHT_EFFECT_RGB_TEST
 	#define RGBLIGHT_EFFECT_ALTERNATING
 	#define RGBLIGHT_EFFECT_TWINKLE
+
+    // If Breathing RGB light is enabled, set it as default
+    #ifdef RGBLIGHT_EFFECT_BREATHING
+        #define RGBLIGHT_DEFAULT_MODE RGBLIGHT_MODE_BREATHING
+    #endif
 
 #endif
 
@@ -121,7 +126,7 @@
 #ifdef RGB_MATRIX_ENABLE
 
     // Based on https://www.reddit.com/r/olkb/comments/sbvefp/has_anyone_gotten_qmk_rgb_matrix_effects_working/
-    #define RGBLED_NUM 72
+    #define RGBLED_NUM 74
     #define DRIVER_LED_TOTAL RGBLED_NUM
     #define RGB_MATRIX_MAXIMUM_BRIGHTNESS 120 // limits maximum brightness of LEDs to 150 out of 255. Higher may cause the controller to crash.
     #define RGB_MATRIX_HUE_STEP 8
@@ -130,7 +135,7 @@
     #define RGB_MATRIX_SPD_STEP 10
     #define RGB_MATRIX_KEYPRESSES
     #define RGB_MATRIX_FRAMEBUFFER_EFFECTS
-    #define RGB_MATRIX_SPLIT {36,36}
+    #define RGB_MATRIX_SPLIT {37,37}
     #define SPLIT_TRANSPORT_MIRROR
 
 

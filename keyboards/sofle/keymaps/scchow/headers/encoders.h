@@ -87,7 +87,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 
 
     // Turn on RGB/OLED if they are enabled
-    #ifdef RGBLIGHT_ENABLE
+    #if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_TIMEOUT)
         rgb_idle_key_pressed();
     #endif
     #ifdef OLED_ENABLE

@@ -8,10 +8,14 @@
 #define HSV_OVERRIDE_HELP(h, s, v, Override) h, s , Override
 #define HSV_OVERRIDE(hsv, Override) HSV_OVERRIDE_HELP(hsv,Override)
 
-#include "idle_timer.h"
 
-// RGB timeout feature
-static bool rgb_on = true;
+#ifdef RGBLIGHT_TIMEOUT
+    #include "idle_timer.h"
+    // RGB timeout feature
+    static bool rgb_on = true;
+#endif
+
+
 
 
 /* LED Indices for Sofle RGB v3.0
@@ -206,12 +210,15 @@ void rgblight_set_based_on_layer(layer_state_t state){
 	// rgblight_set_layer_state(5, layer_state_cmp(state, _SWITCH));
 }
 
+
+#ifdef RGBLIGHT_TIMEOUT
 void rgb_idle_key_pressed(void){
     // we just pressed a key, so turn on rgb if it was off
     if (!rgb_on) {
         rgblight_enable_noeeprom();
         rgb_on = true;
     }
+
     // reset the idle timer
     idle_timer_reset();
 }
@@ -225,7 +232,7 @@ void rgb_idle_check_timer(void){
         rgb_on = false;
     }
 }
-
+#endif
 
 void rgb_init(void){
     // Enable the LED layers
@@ -233,7 +240,10 @@ void rgb_init(void){
 
 	rgblight_mode(10);// haven't found a way to set this in a more useful way
 
-    // start the idle timer
-    idle_timer_init();
+    #ifdef RGBLIGHT_TIMEOUT
 
+        // start the idle timer
+        idle_timer_init();
+
+    #endif
 }
