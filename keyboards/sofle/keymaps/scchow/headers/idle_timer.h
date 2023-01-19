@@ -6,7 +6,9 @@
 static uint32_t idle_timer = 0; // time since last keypress in milliseconds
 
 void idle_timer_init(void){
-    idle_timer = timer_read32();
+    if (idle_timer == 0){
+        idle_timer = timer_read32();
+    }
 }
 
 void idle_timer_reset(void){

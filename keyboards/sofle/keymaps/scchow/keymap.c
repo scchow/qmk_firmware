@@ -1,4 +1,4 @@
- /* Copyright 2021 Dane Evans
+ /* Copyright 2022 Scott Chow, 2021 Dane Evans
   *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -13,12 +13,11 @@
   * You should have received a copy of the GNU General Public License
   * along with this program.  If not, see <http://www.gnu.org/licenses/>.
   */
-  // SOFLE RGB
-
-/*
-Copied from rbg_default/keymap.c
-Applied modifications based on: https://github.com/josefadamcik/SofleKeyboard/pull/90#issuecomment-999033489
-*/
+ /*
+  * Started from from rbg_default/keymap.c
+  * Applied modifications based on: https://github.com/josefadamcik/SofleKeyboard/pull/90#issuecomment-999033489
+  * To address extra LEDs in Sofle 3.0 prototype
+  */
 
 #include QMK_KEYBOARD_H
 

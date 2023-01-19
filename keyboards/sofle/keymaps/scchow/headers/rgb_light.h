@@ -215,7 +215,8 @@ void rgblight_set_based_on_layer(layer_state_t state){
 void rgb_idle_key_pressed(void){
     // we just pressed a key, so turn on rgb if it was off
     if (!rgb_on) {
-        rgblight_wakeup();
+        rgblight_enable();
+        // rgblight_enable_noeeprom();
         rgb_on = true;
     }
 
@@ -228,7 +229,8 @@ void rgb_idle_check_timer(void){
     // If the leds are on and no key has been pressed for since the timeout
     // save the rgb states, turn the leds off
     if ( rgb_on && idle_timer_check(RGBLIGHT_TIMEOUT)) {
-        rgblight_suspend();
+        rgblight_disable();
+        // rgblight_disable_noeeprom();
         rgb_on = false;
     }
 }
@@ -238,7 +240,7 @@ void rgb_init(void){
     // Enable the LED layers
     rgblight_layers = my_rgb_layers;
 
-	rgblight_mode(10);// haven't found a way to set this in a more useful way
+	rgblight_mode(RGB_MODE_RAINBOW);// haven't found a way to set this in a more useful way
 
     #ifdef RGBLIGHT_TIMEOUT
 
