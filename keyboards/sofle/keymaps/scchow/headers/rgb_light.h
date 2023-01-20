@@ -240,7 +240,7 @@ void rgb_init(void){
     // Enable the LED layers
     rgblight_layers = my_rgb_layers;
 
-	rgblight_mode(RGB_MODE_RAINBOW);// haven't found a way to set this in a more useful way
+	rgblight_mode(RGBLIGHT_MODE_RAINBOW_MOOD);
 
     #ifdef RGBLIGHT_TIMEOUT
 
