@@ -41,8 +41,9 @@
 // #define TAPPING_FORCE_HOLD
 #ifdef TAPPING_TERM
     #undef TAPPING_TERM
-    #define TAPPING_TERM 200
 #endif
+#define TAPPING_TERM 200
+
 
 #undef ENCODER_RESOLUTION
 #define ENCODER_RESOLUTION 4
@@ -98,18 +99,7 @@
 
 // OLED display size and timeout
 #define OLED_DISPLAY_128X32  // Sofle has a 128x32 display
-// Turn off oled after this many miliseconds of inactivity
-// We use our own version of OLED_TIMEOUT because
-// Default OLED_TIMEOUT considers changing animations
-// to be activity, even idle animations!
-// At least that's the working hypothesis on why
-// when the screen with the bongo cat is connected to the computer (thus is master), the oled does not turn off.
 #define OLED_TIMEOUT 60L*1000L // in miliseconds using longs
-// #ifdef OLED_TIMEOUT
-//     // We cannot rely on default OLED_TIMEOUT until it is patched.
-//     #undef OLED_TIMEOUT
-// #endif
-// #define OLED_TIMEOUT_CUSTOM 60*1000
 
 // Enable OLEDs and words per minute tracking for split keyboards
 // Choose what to share across the board
@@ -122,6 +112,9 @@
 
 // allow the keyboard to wake from sleep properly
 // #define USB_SUSPEND_WAKEUP_DELAY 3000
+
+// Debugging can't wake from S3 sleep issue
+// #define NO_SUSPEND_POWER_DOWN
 
 /*
  * RGB Matrix stuff (not used for sofle)
