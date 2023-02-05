@@ -46,7 +46,12 @@
 
 
 #undef ENCODER_RESOLUTION
+// the left encoder that controls alt tab needs a resolution of 4 to avoid skipping
 #define ENCODER_RESOLUTION 4
+// the right encoder that controls volume has an encoding resolution of 2 to avoid skipping
+#define ENCODER_RESOLUTIONS_RIGHT { 2 }
+// ^ reverse this if you change which encoder is alt-tabbing
+
 #define ENCODER_DIRECTION_FLIP
 
 
