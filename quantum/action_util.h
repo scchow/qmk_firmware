@@ -26,7 +26,18 @@ extern "C" {
 
 extern report_keyboard_t *keyboard_report;
 
+/**
+ * @brief Sends the current keyboard HID report to the host, if it has changes
+ * to the previous state.
+ *
+ */
 void send_keyboard_report(void);
+
+/**
+ * @brief Always sends the current keyboard HID report to the host.
+ *
+ */
+void send_keyboard_report_forced(void);
 
 /* key */
 inline void add_key(uint8_t key) {

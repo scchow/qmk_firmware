@@ -81,11 +81,6 @@ COLS = number of cols per side which curently needs to be equal so there are bla
 /* Locking resynchronize hack */
 #define LOCKING_RESYNC_ENABLE
 
-/* If defined, GRAVE_ESC will always act as ESC when CTRL is held.
- * This is useful for the Windows task manager shortcut (ctrl+shift+esc).
- */
-//#define GRAVE_ESC_CTRL_OVERRIDE
-
 /*
  * Feature disable options
  *  These options are also useful to firmware size reduction.
@@ -101,7 +96,3 @@ COLS = number of cols per side which curently needs to be equal so there are bla
 //#define NO_ACTION_LAYER
 //#define NO_ACTION_TAPPING
 //#define NO_ACTION_ONESHOT
-
-/* Bootmagic Lite key configuration */
-//#define BOOTMAGIC_LITE_ROW 0
-//#define BOOTMAGIC_LITE_COLUMN 0

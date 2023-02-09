@@ -864,6 +864,7 @@ void protocol_pre_task(void) {
             if (USB_Device_RemoteWakeupEnabled && suspend_wakeup_condition()) {
                 USB_Device_SendRemoteWakeup();
                 clear_keyboard();
+                send_keyboard_report_forced();
 
 #    if USB_SUSPEND_WAKEUP_DELAY > 0
                 // Some hubs, kvm switches, and monitors do

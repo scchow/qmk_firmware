@@ -240,11 +240,17 @@ bool is_oneshot_enabled(void) {
 
 #endif
 
-/** \brief Send keyboard report
- *
- * FIXME: needs doc
- */
+static void send_keyboard_report_impl(bool forced);
+
 void send_keyboard_report(void) {
+    send_keyboard_report_impl(false);
+}
+
+void send_keyboard_report_forced(void) {
+    send_keyboard_report_impl(true);
+}
+
+static void send_keyboard_report_impl(bool forced) {
     keyboard_report->mods = real_mods;
     keyboard_report->mods |= weak_mods;
 
@@ -276,7 +282,7 @@ void send_keyboard_report(void) {
     static report_keyboard_t last_report;
 
     /* Only send the report if there are changes to propagate to the host. */
-    if (memcmp(keyboard_report, &last_report, sizeof(report_keyboard_t)) != 0) {
+    if (forced || memcmp(keyboard_report, &last_report, sizeof(report_keyboard_t)) != 0) {
         memcpy(&last_report, keyboard_report, sizeof(report_keyboard_t));
         host_keyboard_send(keyboard_report);
     }

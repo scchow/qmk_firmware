@@ -192,9 +192,9 @@ void protocol_pre_task(void) {
                 restart_usb_driver(&USB_DRIVER);
             }
         }
-        /* Woken up */
-        // variables has been already cleared by the wakeup hook
-        send_keyboard_report();
+        // Woken up - always send at least one HID report to trigger a wakeup
+        clear_keyboard();
+        send_keyboard_report_forced();
 #    ifdef MOUSEKEY_ENABLE
         mousekey_send();
 #    endif /* MOUSEKEY_ENABLE */
