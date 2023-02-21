@@ -182,19 +182,17 @@ void protocol_pre_task(void) {
 
 #if !defined(NO_USB_STARTUP_CHECK)
     if (USB_DRIVER.state == USB_SUSPENDED) {
-        print("[s]");
+        dprintln("suspending keyboard");
         while (USB_DRIVER.state == USB_SUSPENDED) {
             /* Do this in the suspended state */
-            suspend_power_down(); // on AVR this deep sleeps for 15ms
+            suspend_power_down();
             /* Remote wakeup */
             if (suspend_wakeup_condition()) {
                 usbWakeupHost(&USB_DRIVER);
-                restart_usb_driver(&USB_DRIVER);
             }
         }
         /* Woken up */
-        // variables has been already cleared by the wakeup hook
-        send_keyboard_report();
+        clear_keyboard();
 #    ifdef MOUSEKEY_ENABLE
         mousekey_send();
 #    endif /* MOUSEKEY_ENABLE */
