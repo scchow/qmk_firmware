@@ -75,32 +75,32 @@ typedef struct {
 
 /// Define some functions to be used in Tap Dancing
 
-// Managing current dance 
-td_state_t cur_dance(qk_tap_dance_state_t *state);
+// Managing current dance
+td_state_t cur_dance(tap_dance_state_t *state);
 
-// For the F12-Numpad tap dance. 
-void td_f12_num_finished(qk_tap_dance_state_t *state, void *user_data);
-void td_f12_num_reset(qk_tap_dance_state_t *state, void *user_data);
+// For the F12-Numpad tap dance.
+void td_f12_num_finished(tap_dance_state_t *state, void *user_data);
+void td_f12_num_reset(tap_dance_state_t *state, void *user_data);
 
 // For the Delete-PrintScreen tap dance.
-void td_del_print_finished(qk_tap_dance_state_t *state, void *user_data);
-void td_del_print_reset(qk_tap_dance_state_t *state, void *user_data);
+void td_del_print_finished(tap_dance_state_t *state, void *user_data);
+void td_del_print_reset(tap_dance_state_t *state, void *user_data);
 
 // For the Reset-Capslock tap dance.
-void td_reset_caps_finished(qk_tap_dance_state_t *state, void *user_data);
-void td_reset_caps_reset(qk_tap_dance_state_t *state, void *user_data);
+void td_reset_caps_finished(tap_dance_state_t *state, void *user_data);
+void td_reset_caps_reset(tap_dance_state_t *state, void *user_data);
 
 // Reset layers back to default and Caps lock off
 void reset_layers_and_caps(void){
     layer_clear(); // disable all layers
     // If Caps lock is on, disable it
-    if (IS_HOST_LED_ON(USB_LED_CAPS_LOCK)){
+    if (host_keyboard_led_state().caps_lock){
         tap_code(KC_CAPS);
     }
 }
 
 // Tap Dance function for Layer Reset/Caps Lock key
-void td_caps_reset(qk_tap_dance_state_t *state, void *user_data){
+void td_caps_reset(tap_dance_state_t *state, void *user_data){
     // If its tapped twice, act as Caps Lock
     #ifdef CONSOLE_ENABLE
         dprintf("td_caps_reset called with count: %d\n", state->count);
@@ -115,7 +115,7 @@ void td_caps_reset(qk_tap_dance_state_t *state, void *user_data){
 }
 
 // Tap Dance definitions
-qk_tap_dance_action_t tap_dance_actions[] = {
+tap_dance_action_t tap_dance_actions[] = {
     // Tap once for Escape, twice for Caps Lock
     [TD_RESET_CAPS] = ACTION_TAP_DANCE_FN(td_caps_reset),
     [TD_F12_NUMPAD] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_f12_num_finished, td_f12_num_reset),
@@ -152,15 +152,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  TD(TD_F12_NUMPAD),  TD(TD_RESET_CAPS_HOLD),    KC_MUTE,
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,          KC_DEL,
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,          KC_HOME,
-        TT(_NAV_0_VIM),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_END,
+        LT(_NAV_0_VIM, KC_ESC),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_END,
         KC_LSFT,          KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_RSFT, KC_UP,   LT(_NAV_0_VIM, KC_ESC),
         KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(1),   KC_RCTL, KC_LEFT, KC_DOWN, KC_RGHT
     ),
 
     [_RGB] = LAYOUT(
-        EEPROM_RESET , KC_CALC, KC_MYCM, KC_WHOM, KC_MSEL, KC_MPRV, KC_MNXT, KC_MPLY, KC_MSTP, KC_MUTE, KC_VOLD, KC_VOLU, _______, _______,          _______,
+        QK_CLEAR_EEPROM , KC_CALC, KC_MYCM, KC_WHOM, KC_MSEL, KC_MPRV, KC_MNXT, KC_MPLY, KC_MSTP, KC_MUTE, KC_VOLD, KC_VOLU, _______, _______,          _______,
+       //     `,              1,                2,               3,             4,                            5,               6,                     7,                          8,                    9,           0,
         RGB_TOG, RGB_MODE_PLAIN, RGB_MODE_BREATHE, RGB_HUE_BREATHE, RGB_CYCLE_ALL, RGB_SOLID_REACTIVE_MULTIWIDE, RGB_MULTISPLASH, RGB_SOLID_MULTISPLASH, RGB_CUSTOM_RANDOM_REACTIVE, RGB_CUSTOM_BREATHING, RGB_SET_OFF, _______, _______, _______,          _______,
-        RGB_MOD, RGB_HUI, RGB_VAI, RGB_SPI, _______, RGB_CUSTOM_SOLID_REACTIVE_MULTIWIDE, _______, _______, _______, _______, _______, _______, _______, RESET,            _______,
+        RGB_MOD, RGB_HUI, RGB_VAI, RGB_SPI, _______, RGB_CUSTOM_SOLID_REACTIVE_MULTIWIDE, _______, _______, _______, _______, _______, _______, _______, QK_BOOT,            _______,
         _______, RGB_HUD, RGB_VAD, RGB_SPD, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______,
         _______,          _______, _______, _______, _______, NK_OFF, NK_ON, _______, _______, _______, _______,          _______, RGB_MOD, _______,
         _______, _______, _______,                            _______,                            _______, _______, _______, RGB_SPD, RGB_RMOD, RGB_SPI
@@ -250,7 +251,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
         tap_code(KC_VOLU);
         #ifdef CONSOLE_ENABLE
             dprint("Volume up\n");
-        #endif            
+        #endif
     } else {
         tap_code(KC_VOLD);
         #ifdef CONSOLE_ENABLE
@@ -269,6 +270,7 @@ void keyboard_post_init_user(void) {
   //debug_mouse=true;
 }
 
+#ifdef RGB_MATRIX_ENABLE
 // Turn on a sequence of RGB
 void rgb_light_sequence(const uint16_t *led_arr, int led_arr_len, int r, int g, int b, uint8_t led_min, uint8_t led_max){
     for (size_t i=0; i < led_arr_len; ++i){
@@ -278,14 +280,14 @@ void rgb_light_sequence(const uint16_t *led_arr, int led_arr_len, int r, int g, 
 
 // Set all RGB to off
 void rgb_turn_off(uint8_t led_min, uint8_t led_max){
-    for (size_t i = 0; i < DRIVER_LED_TOTAL; ++i){
+    for (size_t i = 0; i < RGB_MATRIX_LED_COUNT; ++i){
         RGB_MATRIX_INDICATOR_SET_COLOR(i, 0, 0, 0);
     }
 }
 
-void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 
-    if (IS_HOST_LED_ON(USB_LED_CAPS_LOCK) || get_highest_layer(layer_state) > 0){
+    if (host_keyboard_led_state().caps_lock || get_highest_layer(layer_state) > 0){
         RGB_MATRIX_INDICATOR_SET_COLOR(LED_PSCR, 0, 100, 100); //Light up Reset layer key
     }
 
@@ -350,15 +352,17 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
         RGB_MATRIX_INDICATOR_SET_COLOR(LED_6, 128, 0, 0); //Light up 6 - Backspace
         RGB_MATRIX_INDICATOR_SET_COLOR(LED_0, 0, 0, 255); //Light up 0 - Delete
     }
-        
+
     // Light up shifts and side indicator light if Caps lock is on
-    if (IS_HOST_LED_ON(USB_LED_CAPS_LOCK)){
+    if (host_keyboard_led_state().caps_lock){
         // RGB_MATRIX_INDICATOR_SET_COLOR(4, 0, 100, 0); //Light up left shift key
         RGB_MATRIX_INDICATOR_SET_COLOR(LED_RSFT, 204, 102, 0); //Light up right shift key in orange
         // RGB_MATRIX_INDICATOR_SET_COLOR(LED_LSFT, 204, 102, 0); //Light up left shift key in orange
         RGB_MATRIX_INDICATOR_SET_COLOR(LED_SPC, 204, 102, 0); //Light up Space key in orange
         rgb_light_sequence(LED_SIDE_RIGHT, LED_SIDE_RIGHT_SIZE, 204, 102, 0, led_min, led_max);
     }
+
+    return true; // true means continue to execute keyboard-level handlers for the same event, which we want
 }
 
 /* Macros
@@ -388,6 +392,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)  {
         case RGB_CYCLE_ALL:
             rgb_matrix_mode(RGB_MATRIX_CYCLE_ALL);
             break;
+#ifdef RGB_MATRIX_CUSTOM_USER
         case RGB_CUSTOM_SOLID_REACTIVE_MULTIWIDE:
             rgb_matrix_mode(RGB_MATRIX_CUSTOM_my_solid_reactive_wide);
             break;
@@ -403,10 +408,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)  {
             // rgb_matrix_sethsv_noeeprom(HSV_OFF);
             // rgb_matrix_mode(RGB_MATRIX_NONE);
             break;
+#endif
     }
 
     return true;
 };
+#endif
 
 /* Return an integer that corresponds to what kind of tap dance should be executed.
  *
@@ -435,17 +442,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)  {
  * For the third point, there does exist the 'TD_DOUBLE_SINGLE_TAP', however this is not fully tested
  *
  */
-td_state_t cur_dance(qk_tap_dance_state_t *state) {
+td_state_t cur_dance(tap_dance_state_t *state) {
     if (state->count == 1) {
         if (state->interrupted || !state->pressed){
             return TD_SINGLE_TAP;
         }
-        
+
         // Key has not been interrupted, but the key is still held. Means you want to send a 'HOLD'.
         else{
             return TD_SINGLE_HOLD;
         }
-    } 
+    }
     return TD_UNKNOWN;
     //     else if (state->count == 2) {
     //     // TD_DOUBLE_SINGLE_TAP is to distinguish between typing "pepper", and actually wanting a double tap
@@ -471,14 +478,14 @@ static td_tap_t td_f12_num_tap_state = {
     .state = TD_NONE
 };
 
-void td_f12_num_finished(qk_tap_dance_state_t *state, void *user_data) {
+void td_f12_num_finished(tap_dance_state_t *state, void *user_data) {
     td_f12_num_tap_state.state = cur_dance(state);
     switch (td_f12_num_tap_state.state) {
-        case TD_SINGLE_TAP: 
+        case TD_SINGLE_TAP:
             #ifdef CONSOLE_ENABLE
                 dprint("Press F12\n");
             #endif
-            // Allow single click disable of numpad 
+            // Allow single click disable of numpad
             if (layer_state_is(_NUM_PAD)){
                 dprint("Numpad on, read tap, turning off numpad.\n");
                 layer_off(_NUM_PAD);
@@ -487,7 +494,7 @@ void td_f12_num_finished(qk_tap_dance_state_t *state, void *user_data) {
                 register_code(KC_F12);
             }
             break;
-        case TD_SINGLE_HOLD: 
+        case TD_SINGLE_HOLD:
             #ifdef CONSOLE_ENABLE
                 dprint("Hold F12\n");
             #endif
@@ -495,12 +502,12 @@ void td_f12_num_finished(qk_tap_dance_state_t *state, void *user_data) {
                 dprint("Numpad off, read hold, turning on numpad.\n");
                 layer_on(_NUM_PAD);
             }
-            // Expose a way to press F12 if numpad is on (by double tap) 
+            // Expose a way to press F12 if numpad is on (by double tap)
             else{
                 dprint("Numpad on, read hold, sending F12.\n");
                 register_code(KC_F12);
             }
-            // layer_invert(_NUM_PAD); 
+            // layer_invert(_NUM_PAD);
             break;
         // case TD_DOUBLE_TAP: register_code(KC_ESC); break;
         // case TD_DOUBLE_HOLD: register_code(KC_LALT); break;
@@ -512,25 +519,25 @@ void td_f12_num_finished(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void td_f12_num_reset(qk_tap_dance_state_t *state, void *user_data) {
+void td_f12_num_reset(tap_dance_state_t *state, void *user_data) {
     switch (td_f12_num_tap_state.state) {
-        case TD_SINGLE_TAP: 
+        case TD_SINGLE_TAP:
             // If we are not in numpad mode,
             // Pressing F12 results in normal F12 press
-            // So on release, stop pressing F12 
+            // So on release, stop pressing F12
             if (!layer_state_is(_NUM_PAD)){
-                unregister_code(KC_F12); 
+                unregister_code(KC_F12);
             }
             // Otherwise we are in numpad mode
             // and on downpress, we stopped being in numpad mode
             // So no keys need to be unregistered.
             break;
-        case TD_SINGLE_HOLD: 
-            // If we are in numpad mode, 
+        case TD_SINGLE_HOLD:
+            // If we are in numpad mode,
             // Holding F12 resulted in normal F12 press
             // So on release, stop pressing F12
             if (layer_state_is(_NUM_PAD)){
-                unregister_code(KC_F12); 
+                unregister_code(KC_F12);
             }
             // Otherwise we are not in numpad mode,
             // and on downpress, we moved to being in numpad mode.
@@ -550,16 +557,16 @@ static td_tap_t td_reset_caps_tap_state = {
     .state = TD_NONE
 };
 
-void td_reset_caps_finished(qk_tap_dance_state_t *state, void *user_data) {
+void td_reset_caps_finished(tap_dance_state_t *state, void *user_data) {
     td_reset_caps_tap_state.state = cur_dance(state);
     switch (td_reset_caps_tap_state.state) {
-        case TD_SINGLE_TAP: 
+        case TD_SINGLE_TAP:
             #ifdef CONSOLE_ENABLE
                 dprint("Press Reset\n");
             #endif
             reset_layers_and_caps();
             break;
-        case TD_SINGLE_HOLD: 
+        case TD_SINGLE_HOLD:
             #ifdef CONSOLE_ENABLE
                 dprint("Hold Reset for caps\n");
             #endif
@@ -568,12 +575,12 @@ void td_reset_caps_finished(qk_tap_dance_state_t *state, void *user_data) {
             //     dprint("Numpad off, read hold, turning on numpad.\n");
             //     layer_on(_NUM_PAD);
             // }
-            // // Expose a way to press F12 if numpad is on (by double tap) 
+            // // Expose a way to press F12 if numpad is on (by double tap)
             // else{
             //     dprint("Numpad on, read hold, sending F12.\n");
             //     register_code(KC_F12);
             // }
-            // // layer_invert(_NUM_PAD); 
+            // // layer_invert(_NUM_PAD);
             // break;
         // case TD_DOUBLE_TAP: register_code(KC_ESC); break;
         // case TD_DOUBLE_HOLD: register_code(KC_LALT); break;
@@ -585,12 +592,12 @@ void td_reset_caps_finished(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void td_reset_caps_reset(qk_tap_dance_state_t *state, void *user_data) {
+void td_reset_caps_reset(tap_dance_state_t *state, void *user_data) {
     switch (td_reset_caps_tap_state.state) {
-        case TD_SINGLE_TAP: 
+        case TD_SINGLE_TAP:
             // Nothing to do on release, as reset state already sent
             break;
-        case TD_SINGLE_HOLD: 
+        case TD_SINGLE_HOLD:
             // Stop holding down caps lock
             unregister_code(KC_CAPS);
             break;
@@ -608,16 +615,16 @@ static td_tap_t td_del_print_tap_state = {
     .state = TD_NONE
 };
 
-void td_del_print_finished(qk_tap_dance_state_t *state, void *user_data) {
+void td_del_print_finished(tap_dance_state_t *state, void *user_data) {
     td_del_print_tap_state.state = cur_dance(state);
     switch (td_del_print_tap_state.state) {
-        case TD_SINGLE_TAP: 
+        case TD_SINGLE_TAP:
             #ifdef CONSOLE_ENABLE
                 dprint("Press Delete\n");
             #endif
             register_code(KC_DEL);
             break;
-        case TD_SINGLE_HOLD: 
+        case TD_SINGLE_HOLD:
             #ifdef CONSOLE_ENABLE
                 dprint("Hold Delete for Print Screen\n");
             #endif
@@ -627,12 +634,12 @@ void td_del_print_finished(qk_tap_dance_state_t *state, void *user_data) {
             //     dprint("Numpad off, read hold, turning on numpad.\n");
             //     layer_on(_NUM_PAD);
             // }
-            // // Expose a way to press F12 if numpad is on (by double tap) 
+            // // Expose a way to press F12 if numpad is on (by double tap)
             // else{
             //     dprint("Numpad on, read hold, sending F12.\n");
             //     register_code(KC_F12);
             // }
-            // // layer_invert(_NUM_PAD); 
+            // // layer_invert(_NUM_PAD);
             // break;
         // case TD_DOUBLE_TAP: register_code(KC_ESC); break;
         // case TD_DOUBLE_HOLD: register_code(KC_LALT); break;
@@ -644,12 +651,12 @@ void td_del_print_finished(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void td_del_print_reset(qk_tap_dance_state_t *state, void *user_data) {
+void td_del_print_reset(tap_dance_state_t *state, void *user_data) {
     switch (td_reset_caps_tap_state.state) {
-        case TD_SINGLE_TAP: 
+        case TD_SINGLE_TAP:
             unregister_code(KC_DEL);
             break;
-        case TD_SINGLE_HOLD: 
+        case TD_SINGLE_HOLD:
             // Stop holding down caps lock
             unregister_code(KC_PSCR);
             print_screen_held = false;

@@ -150,7 +150,7 @@ const uint16_t LED_LIST_NUMPAD_NUM[] = {
     LED_U, LED_I, LED_O,
     LED_J, LED_K, LED_L,
     LED_M, LED_COMM, LED_DOT,
-    LED_SPC, 
+    LED_SPC,
 };
 
 int LED_LIST_NUMPAD_MODS_SIZE = 10;
@@ -158,7 +158,7 @@ const uint16_t LED_LIST_NUMPAD_MODS[] = {
           LED_7, LED_8, LED_9,
     LED_Y,                LED_P,
     LED_H,                LED_SCLN,
-     
+
     LED_B, LED_F12, LED_RALT
 };
 
@@ -174,3 +174,7 @@ const uint16_t LED_LIST_IJKL[] = {LED_I, LED_J, LED_K, LED_L};
 
 int LED_LIST_HJKL_SIZE = 4;
 const uint16_t LED_LIST_HJKL[] = {LED_H, LED_J, LED_K, LED_L};
+
+// These LEDs are red even when they are set as off...
+int LED_LIST_STUCK_ON_SIZE = 10;
+const uint16_t LED_LIST_STUCK_ON[] = {LED_PSCR, LED_DEL, LED_PGDN, LED_PGUP, LED_FN, LED_LEFT, LED_RIGHT, LED_UP, LED_DOWN, LED_RSFT};

@@ -17,7 +17,7 @@ BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
 RGBLIGHT_ENABLE = no        # Enable keyboard RGB underglow
 AUDIO_ENABLE = no           # Audio output
 ENCODER_ENABLE = yes
-RGB_MATRIX_ENABLE = yes
+RGB_MATRIX_ENABLE = no
 RGB_MATRIX_DRIVER = AW20216
 
 
@@ -27,7 +27,7 @@ RGB_MATRIX_DRIVER = AW20216
 # https://beta.docs.qmk.fm/using-qmk/software-features/feature_debounce_type
 DEBOUNCE_TYPE = sym_defer_pk
 
-# VIA Support: 
+# VIA Support:
 # WARNING: Enabling this prevents any other changes to keymap.c from working
 # Until VIA_ENABLE is set to no again.
 VIA_ENABLE = no
