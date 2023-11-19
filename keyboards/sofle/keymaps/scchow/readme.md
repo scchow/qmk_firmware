@@ -15,7 +15,7 @@ In config.h, instead of setting `#define MASTER_LEFT` or `#define MASTER_RIGHT`,
 In `config.h`, uncomment `#define EE_HANDS` and comment out `#define MASTER_LEFT`/`#define MASTER_RIGHT`. 
 Then flash each side with the corresponding commands:
 ```
- make sofle:scchow:uf2-split-left
+ make sofle:scchow:uf2-split-right
 ```
 and 
 ```

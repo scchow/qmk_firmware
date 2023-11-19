@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../sofle.h"
+#include QMK_KEYBOARD_H
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*
@@ -24,11 +25,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|---------------+-------+--------+--------+-------+------|  |--------+-------+--------+--------+--------+---------|
   KC_TAB, KC_Q,   KC_W,   KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
   //|---------------+-------+--------+--------+-------+------|  |--------+-------+--------+--------+--------+---------|
-  LT(_NAV2,KC_ESC),  KC_A,   KC_S,   KC_D,    KC_F,    KC_G,     KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+  LT(_NAV2, KC_ESC),  MT(MOD_LCTL, KC_A),   KC_S,   MT(MOD_LALT, KC_D),    MT(MOD_LCTL, KC_F),    KC_G,     KC_H,    MT(MOD_LCTL, KC_J),    MT(MOD_LALT, KC_K),    KC_L,    KC_SCLN, KC_QUOT,
   //|------+-------+--------+--------+--------+------|  ===  |  |  ===  |--------+-------+--------+--------+--------+---------|
-  KC_LSFT, KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,  QK_BOOT,    KC_MUTE, KC_N,    KC_M,   KC_COMM, KC_DOT,  KC_SLSH,  KC_ENT,
-  //|------+-------+--------+--------+--------+------|  ===  |  |  ===  |--------+-------+----------+--------+--------+---------|
-         KC_LALT, KC_SPC, KC_LGUI, TT(_NAV), TD(TD_LCTL_LALT),   KC_BSPC, KC_SPC, KC_ENT,  TT(_NAV), TG(_GAME)
+  KC_LSFT, KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,  QK_BOOT,    QK_BOOT, KC_N,    KC_M,   KC_COMM, KC_DOT,  KC_SLSH,  KC_DEL,
+  //|------+-------+--------+--------+--------+------|  ==  |  |  ===  |--------+-------+----------+--------+--------+---------|
+         KC_LALT, TT(_NAV), KC_LGUI, LT(_NAV, KC_SPC), MT(MOD_LCTL, KC_BSPC),   KC_LSFT, LT(_NAV2,KC_SPC), KC_ENT,  TT(_NAV), TG(_GAME)
   //    \-------+--------+---------+-------+-----------------|  |-------+--------+--------+---------+-------/
 ),
 
@@ -94,7 +95,7 @@ _______,LCTL(KC_Z), LCTL(KC_X), LCTL(KC_C), LCTL(KC_V), LCTL(KC_S), _______,   _
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * | Esc  | Ins  | Pscr | Menu |      |      |                    |      | PWrd |  Up  | NWrd | DLine| Bspc |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * | Tab  | LAt  | LCtl |LShift|      | Caps |-------.    ,-------|      | Left | Down | Rigth|  Del | Bspc |
+ * | Tab  | LAt  | LCtl |LShift|      | Caps |-------.    ,-------|      | Left | Down | Right|  Del | Bspc |
  * |------+------+------+------+------+------|  MUTE  |    |       |------+------+------+------+------+------|
  * |Shift | Undo |  Cut | Copy | Paste|      |-------|    |-------|      | LStr |      | LEnd |      | Shift|
  * `-----------------------------------------/       /     \      \-----------------------------------------'
