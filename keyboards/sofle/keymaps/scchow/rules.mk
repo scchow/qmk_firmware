@@ -25,3 +25,7 @@ RGBLIGHT_ENABLE = yes
 # RGB_MATRIX_ENABLE = yes
 # RGB_MATRIX_DRIVER = WS2812
 # RGB_MATRIX_CUSTOM_USER = yes //only need this if using custom effects
+
+
+# Tuning Dynamic Tap
+DYNAMIC_TAPPING_TERM_ENABLE = yes
