@@ -41,11 +41,14 @@ static void print_status_narrow(uint8_t wpm){
         case _BASE:
             oled_write_ln("Base", false);
             break;
-        case _NAV:
-            oled_write_ln("Nav", false);
+        case _LOWER:
+            oled_write_ln("Lower", false);
             break;
-        case _NAV2:
-            oled_write_ln("Nav2", false);
+        case _RAISE:
+            oled_write_ln("Raise", false);
+            break;
+        case _COMB:
+            oled_write_ln("Comb", false);
             break;
         case _GAME:
             oled_write_ln("Game", false);

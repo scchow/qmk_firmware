@@ -3,8 +3,9 @@
 enum sofle_layers {
     _DEFAULTS = 0,
     _BASE = 0,
-    _NAV,
-    _NAV2,
+    _LOWER,
+    _RAISE,
+    _COMB, // Must have higher layer number than _LOWER/_RAISE
     _GAME,
     _GAME2,
     _NUMPAD,
@@ -15,7 +16,7 @@ enum sofle_layers {
 enum custom_keycodes {
     KC_BASE = SAFE_RANGE,
     KC_D_MUTE,
-    KC_NAV_1,
-    KC_NAV_2
+    KC_LOWER,
+    KC_RAISE
 };
 

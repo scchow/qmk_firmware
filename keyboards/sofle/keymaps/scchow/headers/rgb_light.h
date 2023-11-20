@@ -143,27 +143,38 @@
 
 // QWERTY,
 // Light on inner column and underglow
-const rgblight_segment_t PROGMEM layer_qwerty_lights[] = RGBLIGHT_LAYER_SEGMENTS(
+const rgblight_segment_t PROGMEM layer_red[] = RGBLIGHT_LAYER_SEGMENTS(
   SET_LAYER_ID(HSV_RED)
-
 );
-
-// _NUM,
-// Light on outer column and underglow
-const rgblight_segment_t PROGMEM layer_num_lights[] = RGBLIGHT_LAYER_SEGMENTS(
+const rgblight_segment_t PROGMEM layer_teal[] = RGBLIGHT_LAYER_SEGMENTS(
 	SET_LAYER_ID(HSV_TEAL)
-
 );
-// _SYMBOL,
-// Light on inner column and underglow
-const rgblight_segment_t PROGMEM layer_symbol_lights[] = RGBLIGHT_LAYER_SEGMENTS(
+const rgblight_segment_t PROGMEM layer_blue[] = RGBLIGHT_LAYER_SEGMENTS(
 	SET_LAYER_ID(HSV_BLUE)
-
-    );
-// _COMMAND,
-// Light on inner column and underglow
-const rgblight_segment_t PROGMEM layer_command_lights[] = RGBLIGHT_LAYER_SEGMENTS(
+);
+const rgblight_segment_t PROGMEM layer_purple[] = RGBLIGHT_LAYER_SEGMENTS(
   SET_LAYER_ID(HSV_PURPLE)
+);
+const rgblight_segment_t PROGMEM layer_cyan[] = RGBLIGHT_LAYER_SEGMENTS(
+  SET_LAYER_ID(HSV_CYAN)
+);
+const rgblight_segment_t PROGMEM layer_gold[] = RGBLIGHT_LAYER_SEGMENTS(
+  SET_LAYER_ID(HSV_GOLD)
+);
+const rgblight_segment_t PROGMEM layer_goldenrod[] = RGBLIGHT_LAYER_SEGMENTS(
+  SET_LAYER_ID(HSV_GOLDENROD)
+);
+const rgblight_segment_t PROGMEM layer_pink[] = RGBLIGHT_LAYER_SEGMENTS(
+  SET_LAYER_ID(HSV_PINK)
+);
+const rgblight_segment_t PROGMEM layer_azure[] = RGBLIGHT_LAYER_SEGMENTS(
+  SET_LAYER_ID(HSV_AZURE)
+);
+const rgblight_segment_t PROGMEM layer_green[] = RGBLIGHT_LAYER_SEGMENTS(
+  SET_LAYER_ID(HSV_GREEN)
+);
+const rgblight_segment_t PROGMEM layer_orange[] = RGBLIGHT_LAYER_SEGMENTS(
+  SET_LAYER_ID(HSV_ORANGE)
 );
 
 //_NUMPAD
@@ -180,33 +191,25 @@ const rgblight_segment_t PROGMEM layer_switcher_lights[] = RGBLIGHT_LAYER_SEGMEN
 );
 
 const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
-    layer_qwerty_lights,
-	layer_num_lights,// overrides layer 1
-	layer_symbol_lights,
-    layer_command_lights,
+    layer_azure,
+    layer_red,
+	layer_blue,
+    layer_purple,
+    layer_green,
+    layer_pink,
 	layer_numpad_lights,
-	layer_switcher_lights  // Overrides other layers
+    layer_orange
 );
 
-// layer_state_t layer_state_set_user(layer_state_t state) {
-// 	rgblight_set_layer_state(0, layer_state_cmp(state, _DEFAULTS) && layer_state_cmp(default_layer_state,_BASE));
-// 	rgblight_set_layer_state(1, layer_state_cmp(state, _LOWER));
-// 	rgblight_set_layer_state(2, layer_state_cmp(state, _RAISE));
-// 	rgblight_set_layer_state(3, layer_state_cmp(state, _ADJUST));
-// 	rgblight_set_layer_state(4, layer_state_cmp(state, _NUMPAD));
-// 	rgblight_set_layer_state(5, layer_state_cmp(state, _SWITCH));
-//     return state;
-// }
-
-
-
 void rgblight_set_based_on_layer(layer_state_t state){
-	rgblight_set_layer_state(0, layer_state_cmp(state, _DEFAULTS) && layer_state_cmp(default_layer_state,_BASE));
-	rgblight_set_layer_state(1, layer_state_cmp(state, _NAV));
-	rgblight_set_layer_state(2, layer_state_cmp(state, _NAV2));
-	rgblight_set_layer_state(3, layer_state_cmp(state, _GAME));
-	rgblight_set_layer_state(5, layer_state_cmp(state, _GAME2));
-	rgblight_set_layer_state(4, layer_state_cmp(state, _NUMPAD));
+	rgblight_set_layer_state(0, layer_state_cmp(state, _DEFAULTS) || layer_state_cmp(default_layer_state,_BASE)); // azure
+	rgblight_set_layer_state(1, layer_state_cmp(state, _LOWER)); // red
+	rgblight_set_layer_state(2, layer_state_cmp(state, _RAISE)); // blue
+	rgblight_set_layer_state(3, layer_state_cmp(state, _COMB));  // purple
+	rgblight_set_layer_state(4, layer_state_cmp(state, _GAME));  // green
+	rgblight_set_layer_state(5, layer_state_cmp(state, _GAME2)); // pink
+	rgblight_set_layer_state(6, layer_state_cmp(state, _NUMPAD)); // numpad
+	rgblight_set_layer_state(7, layer_state_cmp(state, _CONFIG)); // orange
 	// rgblight_set_layer_state(5, layer_state_cmp(state, _SWITCH));
 }
 

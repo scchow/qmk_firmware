@@ -58,7 +58,7 @@ void matrix_scan_user(void) {
 
 layer_state_t layer_state_set_user(layer_state_t state) {
 
-    // state = update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
+    state = update_tri_layer_state(state, _LOWER, _RAISE, _COMB);
 
     #ifdef RGBLIGHT_ENABLE
         rgblight_set_based_on_layer(state);
