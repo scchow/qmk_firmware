@@ -28,8 +28,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   LT(_RAISE, KC_ESC),  KC_A,   KC_S,   KC_D,    KC_F,    KC_G,     KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
   //|------+-------+--------+--------+--------+------|  ===  |  |  ===  |--------+-------+--------+--------+--------+---------|
   KC_LSFT, KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,  TG(_GAME),    KC_MUTE, KC_N,    KC_M,   KC_COMM, KC_DOT,  KC_SLSH,  KC_RSFT,
-  //|------+-------+--------+--------+--------+------|  ==  |  |  ===  |--------+-------+----------+--------+--------+---------|
-   KC_LALT, TT(_LOWER), KC_LGUI, LT(_LOWER, KC_SPC), MT(MOD_LCTL, KC_BSPC), MT(MOD_LALT, KC_DEL),  LT(_RAISE, KC_SPC),  MT(MOD_LSFT,KC_ENT),  TT(_LOWER), KC_LALT
+  //|------+-------+--------+--------+--------+------|  ==  |  |  ===  |--------+--- qmk----+----------+--------+--------+---------|
+   KC_LALT, TT(_LOWER), KC_LGUI, LT(_LOWER, KC_SPC), MT(MOD_LCTL, KC_BSPC), MT(MOD_LALT, KC_DEL),  LT(_RAISE, KC_SPC),  MT(MOD_LSFT,KC_ENT),  TT(_RAISE), KC_LCTL
   //    \-------+--------+---------+-------+-----------------|  |-------+--------+--------+---------+-------/
 ),
 
